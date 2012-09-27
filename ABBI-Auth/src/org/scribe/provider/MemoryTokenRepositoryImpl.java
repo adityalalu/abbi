@@ -50,6 +50,10 @@ public class MemoryTokenRepositoryImpl implements TokenRepository
 		byte key[] = new byte[24];
 		generator.nextBytes(key);
 		String result = new String(Base64.encodeBase64(key));
+		// Fix for double decode bug where + in token gets converted to
+		// spaces.  This fix doesn't eliminate the bug.  It just prevents
+		// it from being triggered.
+		result = result.replace('+', '.').replace('/', '_');
 		Token t = new Token(result.substring(0, 20), result.substring(20), data);
 		return t;
 	}
