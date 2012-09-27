@@ -1,13 +1,9 @@
 <%@page import="org.scribe.provider.*" %><%	response.setHeader("Content-Type", "application/json"); 
-	OAuthProvider provider = 
-		(OAuthProvider)application.getAttribute("OAuth.Provider");
+	OAuthProvider provider = (OAuthProvider)application.getAttribute("OAuth.Provider");
 	try
-	{
-		provider.validate(request);
-	}
+	{	provider.validate(request); }
 	catch (InvalidOAuthRequestException ex)
-	{
-		ex.printStackTrace();
+	{	ex.printStackTrace();
 		response.sendError(401);
 	}
 %>{ 

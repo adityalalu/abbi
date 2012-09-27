@@ -196,5 +196,5 @@ public class Util {
 	    	signatureService.getSignature(baseString, consumerSecret, tokenSecret);
 	    
 	    return signature;
-  }
+	}
 }
