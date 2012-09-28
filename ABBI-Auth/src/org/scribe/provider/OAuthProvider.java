@@ -12,4 +12,5 @@ public interface OAuthProvider
 	public Token getAccessToken(HttpServletRequest req)  throws InvalidOAuthRequestException;
 	public void validate(HttpServletRequest req) throws InvalidOAuthRequestException;
 	public TokenRepository getRepository();
+	public void log(String message, Exception ex);
 }

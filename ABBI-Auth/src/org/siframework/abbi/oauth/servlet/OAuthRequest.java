@@ -63,34 +63,48 @@ public class OAuthRequest
 		String operation = reqURL.substring(reqURL.lastIndexOf('/'));
 
 		OAuthProvider p = (OAuthProvider)getServletConfig().getServletContext().getAttribute("OAuth.Provider");
-		try {
-			
-			Token t = null;
-			
-			if ("/request".equals(operation))
-				t = p.getRequestToken(req);
-			else if ("/access".equals(operation))
-				t = p.getAccessToken(req);
-			else
-			{	resp.sendError(404, operation);
-				return;
-			}
-			
-			resp.setHeader("Content-Type", "application/x-www-form-urlencoded");
-			PrintWriter pw = resp.getWriter();
-			String response =
-				String.format(RESPONSE, t.getToken(), t.getSecret());
-			pw.print(response);
-			resp.setStatus(200);
-		} catch (InvalidOAuthRequestException e) {
-			e.printStackTrace();
+		if (p == null)
+		{
 			try {
-				resp.sendError(401, e.getMessage());
-			} catch (IOException e1) {
-				e1.printStackTrace();
+				resp.sendError(500, "Server not initialized.");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		}
+		else
+		{
+			try {
+				
+				Token t = null;
+				
+				if ("/request".equals(operation))
+					t = p.getRequestToken(req);
+				else if ("/access".equals(operation))
+					t = p.getAccessToken(req);
+				else
+				{	p.log("Invalid operation: " + operation, null);
+					resp.sendError(404, operation);
+					return;
+				}
+				
+				resp.setHeader("Content-Type", "application/x-www-form-urlencoded");
+				PrintWriter pw = resp.getWriter();
+				String response =
+					String.format(RESPONSE, t.getToken(), t.getSecret());
+				p.log("Response:\n" + response, null);
+				pw.print(response);
+				resp.setStatus(200);
+			} catch (InvalidOAuthRequestException e) {
+				e.printStackTrace();
+				try {
+					resp.sendError(401, e.getMessage());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
