@@ -179,8 +179,7 @@ public class SearchProcessor {
 	 * is not correctly formatted, will generate an SC_BAD_REQUEST error.
 	 * @param name  The name of the date parameter.
 	 * @return The date parameter, or null if not present.
-	 * @param name
-	 * @return
+	 * @return A Date Object initialized from the parameter
 	 */
 	public Date getDateParameter(String name)
 	{

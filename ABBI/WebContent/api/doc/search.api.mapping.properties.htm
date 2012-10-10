@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<title>Front-end Servlet Configuration</title>
+	</head>
+	<body>
+	<h1>search.api.mapping.properties</h1>
+	<p>This file lives in the WEB-INF folder of the application, and tells the front-end servlet:</p>
+	<dl>
+	<dt>API</dt><dd>The name of the class to use for the back end (org.siframework.abbi.api.xds.XDSImpl)</dd>
+	<dt>feed</dt><dd>A number of properties to configure what appears in the atom feed<br/><dl>
+	<dt>title</dt><dd>The feed title</dd>
+	<dt>subtitle</dt><dd>The feed subtitle</dd>
+	<dt>icon</dt><dd>The URL to use for the feed icon<br/><img src='http://www.healthit.gov/sites/default/files/bluebutton_icon_whitebg_90x90h.jpg'></dd>
+	<dt>logo</dt><dd>The URL to use for the feed logo<br/><img src='http://www.healthit.gov/sites/default/files/07_bluebutton_logo_whitebg_72dpi_184x77h.jpg'></dd>
+	<dt>rights</dt><dd>A statement of rights<br/><b>Sample</b><br/>
+	<p><i>Content in this feed is provided to receiving applications as authorized by the patient or authorized 
+	representative. The information contained herein may contain sensitive patient information, individually 
+	identifiable data or other protected health information, and should be protected by adequate security 
+	mechanism. The provider of this service communicates this information securely.  Responsibility for 
+	securing this information after it has been delivered through this service is left to the receiving application, 
+	and/or the patient or their authorized representative.</i></p>
+	</dd>
+	<dt>generator</dt><dd>A string describing the feed generator: ABBI Prototype v0.1</dd>
+	</dl>
+	<dt>mimeType</dt><dd>These parameters provide shortcuts for longer mimeType in the API.  The front end
+	will translate parameters using these shortcuts to the specified values before passing them to the back end.<br/>
+	<dl><dt>xml</dt><dd>text/xml</dd>
+	<dt>json</dt><dd>application/json</dd>
+	<dt>pdf</dt><dd>application/json</dd>
+	<dt>plain</dt><dd>text/plain</dd>
+	<dt>text</dt><dd>text/plain</dd>
+	<dt>html</dt><dd>text/html</dd></dl></dd>
+	<dt>format</dt><dd>These parameters map from ABBI specified short format codes to longer 
+	strings providing a comma separated list of codes which the back-end should search for.  There 
+	should be values for each of the following:<br/>
+	<dl><dt>CCD</dt>
+	<dt>CCDA</dt>
+	<dt>CCR</dt>
+	</dl>
+	</dd>
+	
+	<dt>class</dt><dd>These parameters provide mappings from ABBI specified class codes to
+	class codes used by the back end.  Mappings should be provided for each of the following
+	values:<br/>
+	<dl>
+	<dt>Summaries</dt><dd>Class code values for CCD (1.0 or 1.1) or CCR Patient Summaries</dd>
+	<dt>HandP</dt><dd>History and Physical Notes</dd>
+	<dt>Consult</dt><dd>Consult Notes</dd>
+	<dt>Discharge</dt><dd>Discharge Summaries</dd>
+	<dt>Operative</dt><dd>Operative Notes</dd>
+	<dt>Procedure</dt><dd>Procedure Notes</dd>
+	<dt>Progress</dt><dd>Progress Notes</dd>
+	<dt>Imaging</dt><dd>Imaging Reports</dd>
+	<dt>Lab</dt><dd>Lab Results</dd>
+	</dl>
+	</dd>
+	</dl>
+	
+	<h2>Back End Configuration</h2>
+	<p>This properties in this file are also used to configure the back end.  The
+	XDS back end uses these properties to configure the registry, repostories, and
+	audit configuration.  Back-ends are free to define properties that do not overlap
+	with properties used to configure the front-end.</p>
+	
+	<dl>
+	<dt>registry</dt><dd>The URL of the registry (used by the back-end)</dd>
+	<dt>source</dt><dd>The source patient identifier for the registry (used by the back end)</dd>
+	</dl>
