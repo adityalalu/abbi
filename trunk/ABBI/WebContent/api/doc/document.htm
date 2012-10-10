@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<title>Document Retrieval</title>
+	</head>
+	<body>
+		<h1>Document Retrieval</h1>
+		<h2>URL Format</h2>
+		<p class="URL">
+			https://abbi-motorcycleguy.rhcloud.com/net.ihe/Document/<i><a href="#entryUUID">entryUUID</a></i>/?[<a href="#patientID">patientID</a>=<i>PatientID</i>][&amp;<a href="#mimeType">mimeType</a>=<i>type</i>]
+		</p>
+		<h3 id="entryUUID"><i>entryUUID</i></h3>
+		<p>The UUID of the document to retrieve.  If the specified entryUUID is not known to the Document Responder or it 
+		doesn’t correlate to the provided patientID, the Document Responder shall return HTTP response-code 404 (not found) 
+		with the suggested reason-phrase “Document Entry UUID not found”.</p>
+		<h2>Query Parameters</h2>
+		<h3 id="patientID">patientId</h3>
+		<p>The identity of the patient whose information is being requested.  May not be repeated.  If present, must be 
+		compared to the patient associated with the document.  If it does not match, returns an error.</p>
+		<p>If the Document was deprecated, the Document Responder may send a status code of 410, if this is 
+		acceptable by privacy and security policy. Otherwise a 404 shall be sent. If the Document Responder is not 
+		able to format the document in any content types listed in the 'Accept' field, it shall return HTTP response 
+		code 406 – Not Acceptable.</p>
+		<p>The Document Responder may return HTTP redirect responses (responses with values of 301, 302, 303 or 307) 
+		in response to a request.  Document Consumer must follow redirects, but if a loop is detected, it may report
+		an error.</p>
+		<h3 id="mimeType">mimeType</h3>
+		<p>The mimeType to use to return the content.  Overrides Accept-Content header.</p>
+		<p>This parameter may not be repeated.</p>
+		<p>Indicates the format of the content to return.  If the content is of a compatible type, it is returned unmodified.  
+		If there exists a transformation of the content in the specified format, returns that content, specifying the correct 
+		content location in the Content-Location header.  If the content can be transformed to the requested type, 
+		it performs the transformation.
+		</p>

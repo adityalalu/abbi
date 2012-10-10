@@ -1,0 +1,124 @@
+<html>
+	<head>
+		<title>Document Search</title>
+	</head>
+	<body>
+		<h1>Document Search</h1>
+		<h2>URL Format</h2>
+		<p class="URL">
+			https://abbi-motorcycleguy.rhcloud.com/net.ihe/DocumentDossier/search[.atom|.json]?[<a href="#patientID">patientID</a>=<i>patientID</i>]
+			[&amp;<a href="#content">content</a>=include|link] [&amp;<a href="#mimeType">mimeType</a>=<i>mimeType</i>] 
+			[&amp;<a href="#format">format</a>=<i>format</i>] 
+			[&amp;<a href="#serviceStartTime">serviceStartTimeFrom</a>|serviceStopTimeFrom|serviceStartTimeTo|serviceStopTimeTo=<i>YYYYMMDD</i>]
+			[&amp;<a href="#creationTime">creationTimeFrom</a>|creationTimeTo=<i>YYYYMMDD</i>]
+			[&amp;<a href="#count">n</a>=<i>index</i>][&amp;<a href="#count">count</a>=<i>count</i>]
+		</p>
+		<p>If .atom is appended to the search path, results will be supplied in 
+		<a href="http://tools.ietf.org/html/rfc4287" target="_blank">application/atom+xml</a> format as 
+		described <a href="search.atom.htm">here</a>.  If .json is appended to the search path, results will be supplied in 
+		<a href="http://tools.ietf.org/html/rfc4627" target="_blank">application/json</a> format as described <a href="search.json.htm">here</a>.  
+		If no format is specified via the URL, then results will be returned based upon the HTTP Accept header. 
+		Implementations may support other suffixes to support other formats.  If an unrecognized suffix is supplied, 
+		the service should return a 400 Bad Request error in the HTTP Response, and may include information 
+		about supported suffixes in the error page.
+		</p>
+		<h2>Query Parameters</h2>
+		<h3 id="patientID">patientID</h3>
+		<p>The patient whose record is being searched can often be determined by the credentials used to access the 
+		service.  However, a single set of credentials may be authorized to access multiple patient records.  
+		This parameter allows the specific patient whose records are to be accessed to be identified when more than 
+		one patient’s records are accessible through a login.  The service must verify that the logged in user is 
+		authorized to access these records prior to performing the search.  If they are not authorized, the service 
+		may return a 401 Not Authorized, or a 404 Not Found to the HTTP request.
+		</p>
+		<p>These parameters may not be repeated.</p>
+		<p>NOTE: The identifier associated with different patient records need not be the patient’s identifier 
+		as known to the data holder.  Instead, it could be an identifier assigned by the logged in user to 
+		distinguish between accessible accounts.</p>
+		<h3 id="content">content</h3>
+		<p>This parameter specifies whether the content is to be included in the atom feed directly (include), or whether
+		links to it should be included (link).  The default is to link to content.</p>
+		<p>The parameter may not be repeated.</p>
+		<h3 id="mimeType">mimeType</h3>
+		<p>This parameter specifies the format of &lt;content&gt; items in the atom feed (or its JSON equivalent).  
+		It specifies the mime type of the request content and can be any of the following values:
+		<table>
+			<thead><tr><td>mimeType</td><td>Description</td></tr></thead>
+			<tbody>
+				<tr><td>text/xml</td><td>An XML format such as <a href='http://www.hl7.org' target="_blank">HL7</a>'s 
+				<a href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=7" target="_blank">CDA</a> 
+				(including <a href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=6" target="_blank">CCD</a> or 
+				<a href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=258" target="_blank">CCDA</a>) or 
+				<a href='http://www.astm.org' target="_blank">ASTM</a>'s <a href="http://www.astm.org/Standards/E2369.htm" target="_blank">CCR</a></td></tr>
+				<tr><td>text/html</td>
+					<td>HTML suitable for rendering, including <a href="http://www.w3.org/TR/html4/" target="_blank">HTML 4</a>, 
+					<a href="http://www.w3.org/TR/html/" target="_blank">XHTML, and <a href="http://www.w3.org/TR/html5/" target="_blank">HTML 5</td></tr>
+				<tr><td>text/plain</td>
+					<td>A simple text file, such as might be produced using the original Blue Button interface</td></tr>
+				<tr><td>application/pdf</td>
+					<td>A file in the Adobe Portable Document Format</td>
+					</tr>
+				<tr><td>application/json</td>
+					<td>A file in the JSON format</td>
+					</tr>
+			</tbody>
+		</table>
+		<p>Shortened forms for mime type are allowed, where only subtype (xml, html, plain, pdf or json) need be specified.</p>
+		<p>This parameter may be repeated.</p>
+		<h3 type="format">format</h3>
+		<p>The text/xml mime type can represent information using a variety of different schemas representing different information 
+		models.  The purpose of this parameter is to allow users to request information conforming to a specific information models.
+		<p>Three values must be supported for this parameter: CCR, CCD & CCDA</p>
+		<table>
+			<tr><th>Value</th><th>Description</th></tr>
+			<tr><td>CCR</td><td>Content formatted using the ASTM CCR Standard</td></tr>
+			<tr><td>CCD</td><td>Content formatted using the HL7 CDA Standard that conforms the Continuity of Care Document Release 1.0</td></tr>
+			<tr><td>CCDA</td><td>Content formatted using the HL7 CDA Standard that conforms to the Consolidated CDA Specification (including CCD 1.1)</td></tr>
+		</table>
+		<p>This parameter may be repeated.</p>
+		<h3 id="class">class</h3>
+		<p>Various mime types and/or information models can be used to represent different kinds of content, including 
+		summary notes, discharge notes, operative notes, et cetera.  This parameter filters the responses to ensure that only specified 
+		notes are included.  The following values are supported:
+		<table>
+			<tr><th>Values</th><th>Description</th></tr>
+			<tr><td>Summaries</td><td>Summary records using CCD (1.0 or 1.1) and/or CCR</td></tr>
+			<tr><td>HandP</td><td>History and Physical Notes</td></tr>
+			<tr><td>Consult</td><td>Consultation Notes</td></tr>
+			<tr><td>Discharge</td><td>Discharge Summaries</td></tr>
+			<tr><td>Operative</td><td>Operative Notes</td></tr>
+			<tr><td>Procedure</td><td>Procedure Notes</td></tr>
+			<tr><td>Progress</td><td>Progress Notes</td></tr>
+			<tr><td>Imaging</td><td>Imaging Reports</td></tr>
+			<tr><td>Lab</td><td>Laboratory Studies</td></tr>
+		</table>
+		<p>This parameter corresponds to the IHE MHD classCode parameter, but simplifies the implementation.</p>
+		<p>This parameter may be repeated.</p>
+		<h3 id="serviceStartTime">serviceStartTimeFrom, serviceStartTimeTo, serviceEndTimeFrom, serviceEndTimeTo</h3>
+		<p>These parameters allow content to be filtered by the associated date of service.  The date is specified in YYYYMMDD format.  
+		Parameters specify the lower and upper bounds such that serviceStartTimeTo &gt; serviceStartTime &gt;= serviceStartTimeFrom and 
+		serviceStopTimeTo &gt; serviceStopTime &gt;= serviceStopTimeFrom. 
+		</p>
+		<p>These parameters may not be repeated.</p>
+		<h3 id="creationTime">creationTimeFrom, creationTimeTo</h3>
+		<p>These parameters allow content to be filtered by the content creation time.  The date is specified in YYYYMMDD format.</p>
+		<p>These parameters may not be repeated.</p>
+		<h3 id="count">count, n</h3>
+		<p>These two parameters allow the content of the atom feed (or it’s JSON equivalent) to be paginated.  The value of n specifies 
+		the ordinal position of the first record to be returned.  The count parameter specifies the maximum number of records desired.  
+		The server must honor the value in the n parameter, or return a 501 Not Implemented error if it does not support pagination.  
+		It should honor the count parameter.  These parameters may not be repeated.
+		</p>
+		<p class="NOTE">NOTE: Pagination may return inconsistent results between calls when new content is being made available.</p>  
+		<h3>Ordering of Responses</h3>
+		<p>In order for pagination to work, responses must have a defined order.  Responses are ordered by by document 
+		creation time (from most to least recent), and then by document identifier to ensure consistent order.  When 
+		results are being aggregated across multiple systems (e.g., through a federated query), the overall results and 
+		ordering may vary between calls.  Pagination is defined as a convenience mechanism, but cannot guarantee that the 
+		same results will be provided between calls.</p>
+		<h3>Repeatable Parameters</h3>
+		<p>Several of the parameters above can be repeated.  To repeat a parameter, specify it multiple times as separate 
+		query parameters.  For example, to request content that is available in either xml or html format, you would use 
+		mimeType=xml&amp;mimeType=html in the query parameter.</p>
+	</body>
+</html>
