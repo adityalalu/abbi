@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>ABBI</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>SecurePages</web-resource-name>
+			<description>Security constraint for ABBI Resources</description>
+			<url-pattern>/netx.ihe/*</url-pattern>
+		</web-resource-collection>
+
+		<auth-constraint>
+			<description>only let users login </description>
+			<role-name>user</role-name>
+		</auth-constraint>
+
+		<user-data-constraint>
+			<description>SSL not required (Change to CONFIDENTIAL for deployment)</description>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+   	<login-config>
+   		<auth-method>FORM</auth-method>
+   		<form-login-config>
+   			<form-login-page>/login.jsp</form-login-page>
+   			<form-error-page>/lerror.jsp</form-error-page>
+   		</form-login-config>
+   	</login-config>
+ 
+	<security-role>
+	    <description>The User ROLE</description>
+	    <role-name>user</role-name>
+ 	</security-role>
+ 	
+ 	<servlet>
+ 		<servlet-name>Initialization</servlet-name>
+ 		<jsp-file>/init.jsp</jsp-file>
+		<load-on-startup>0</load-on-startup>
+ 	</servlet>
+ 	
+	<servlet>
+    	<servlet-name>SearchServlet</servlet-name>
+    	<servlet-class>org.siframework.abbi.servlet.Search</servlet-class>
+    	<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>SearchServlet</servlet-name>
+    	<url-pattern>/search</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+    	<servlet-name>SearchServlet</servlet-name>
+    	<url-pattern>/search.atom</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+    	<servlet-name>SearchServlet</servlet-name>
+    	<url-pattern>/search.json</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+    	<servlet-name>SearchServlet</servlet-name>
+    	<url-pattern>/net.ihe/DocumentDossier/search</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+    	<servlet-name>SearchServlet</servlet-name>
+    	<url-pattern>/xdsentry/search</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+    	<servlet-name>DocumentServlet</servlet-name>
+    	<jsp-file>/document.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>DocumentServlet</servlet-name>
+    	<url-pattern>/net.ihe/Document/*</url-pattern>
+	</servlet-mapping>
+</web-app>
