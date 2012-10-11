@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -52,17 +53,20 @@ public class SearchProcessor {
 	
 	// Parameter Names to use.
 	private final static String
-		PATIENTID = "patientID",
-		MIMETYPE = "mimeType",
+		PATIENTID = "patientid",
+		MIMETYPE = "mimetype",
 		FORMAT = "format",
 		CLASS = "class",
 		CONTENT = "content",
-		SERVICESTARTTIMEFROM = "serviceStartTimeFrom",
-		SERVICESTARTTIMETO = "serviceStartTimeTo",
-		SERVICESTOPTIMEFROM = "serviceStopTimeFrom",
-		SERVICESTOPTIMETO = "serviceStopTimeTo",
-		CREATIONTIMEFROM = "creationTimeFrom",
-		CREATIONTIMETO = "creationTimeTo",
+		SERVICESTARTTIMEFROM = "service.start-after",
+		SERVICESTARTTIMETO = "service.start-before",
+		SERVICESTARTTIME = "service.start",
+		SERVICESTOPTIMEFROM = "service.stop-after",
+		SERVICESTOPTIMETO = "service.stop-before",
+		SERVICESTOPTIME = "service.stop",
+		CREATIONTIMEFROM = "created-before",
+		CREATIONTIMETO = "created-after",
+		CREATIONTIME = "created",
 		COUNT = "count",
 		N = "n";
 	
@@ -86,6 +90,7 @@ public class SearchProcessor {
 	private final Properties properties;
 
 	private Map<String, List<String>> mimeTypeMap = new HashMap<String,List<String>>();
+	private boolean hasErrors = false;
 	
 	public SearchProcessor(
 		HttpServletRequest request, 
@@ -124,7 +129,20 @@ public class SearchProcessor {
 		this.strict = strict;
 	}
 	
-
+	public List<String> getRequestParameters(String name)
+	{
+		List<String> values = new ArrayList<String>();
+		Enumeration<String> paramNames = (Enumeration<String>)request.getParameterNames();
+		while (paramNames.hasMoreElements())
+		{   String paramName = paramNames.nextElement();
+		 	if (paramName.equalsIgnoreCase(name))
+			{	String[] paramValues = request.getParameterValues(paramName);
+				values.addAll(Arrays.asList(paramValues));
+			}
+		}
+		return values;
+	}
+	
 	/**
 	 * Gets a parameter that should appear only once by name.  Sends an SC_BAD_REQUEST
 	 * error when running in STRICT mode if the parameter appears more than once.
@@ -132,20 +150,20 @@ public class SearchProcessor {
 	 * @return The parameter, or null if the parameter is not present.
 	 */
 	public String getParameter(String name)
-	{	String values[] = request.getParameterValues(name);
-	
-		if (values == null)
+	{
+		List<String> values = getRequestParameters(name);
+		if (values.size() == 0)
 			return null;
 		
-		// Generate an error in STRICT mode.  In normal mode,
-		// just use the first value and ignore others
-		if (isStrict() && values.length > 1)
-			sendError(
-				HttpServletResponse.SC_BAD_REQUEST,
+		if (values.size() > 1 && isStrict())
+		{	sendError(HttpServletResponse.SC_BAD_REQUEST,
 				"Only one value allowed for " + name);
-		return values[0];
+			return null;
+		}
+		
+		return values.get(0);
 	}
-	
+
 	/**
 	 * Gets a date parameter.  Uses getParameter() because date parameters can only be
 	 * specified once.  Converts it to a Date value.  In STRICT mode, if the date value 
@@ -170,6 +188,31 @@ public class SearchProcessor {
 			);
 		
 		return date;
+	}
+	
+	public Date[] getDateRangeParameter(String name, boolean isISO)
+	{
+		Date d[] = new Date[2];
+		
+		Date both = isISO ? getISODateParameter(name) : getDateParameter(name);
+		String fromName = name + "-after";
+		Date from = isISO ? getISODateParameter(fromName) : getDateParameter(fromName);
+		String toName = name + "-before";
+		Date to = isISO ? getISODateParameter(toName) : getDateParameter(toName);
+		
+		d[0] = from;
+		d[1] = to;
+		
+		if (both != null)
+		{	if (isStrict() && (from != null || to != null))
+			{	sendError(HttpServletResponse.SC_BAD_REQUEST,
+					name + " cannot be used with " + fromName + " or " + toName);
+			}
+			d[0] = both;
+			d[1] = both;
+		}
+		
+		return d;
 	}
 	
 	/**
@@ -232,7 +275,7 @@ public class SearchProcessor {
 	 */
 	public String[] getArrayParameter(String name, Set<String> values)
 	{
-		String[] results = request.getParameterValues(name);
+		List<String> results = getRequestParameters(name);
 		if (results == null)
 			return EMPTY;
 		
@@ -247,7 +290,7 @@ public class SearchProcessor {
 				}
 			}
 		}
-		return results;
+		return results.toArray(new String[results.size()]);
 	}
 	
 	/**
@@ -259,6 +302,7 @@ public class SearchProcessor {
 	{
 		try
 		{
+			hasErrors = true;
 			response.sendError(sc, message);
 		}
 		catch (IOException ex)
@@ -267,7 +311,7 @@ public class SearchProcessor {
 		}
 	}
 	
-	public SearchParameters getAPIParameters()
+	public SearchParameters getCommonAPIParameters(boolean isISO)
 	{
 		SearchParameters p = new SearchParameters();
 		// Now we get the various parameters
@@ -298,20 +342,136 @@ public class SearchProcessor {
 		p.setIndex((int)getIntParameter(N));
 		p.setCount((int)getIntParameter(COUNT));
 		
+		Date d[] = getDateRangeParameter(SERVICESTARTTIME, isISO);
+		p.setServiceStartTimeFrom(d[0]);
+		p.setServiceStartTimeTo(d[1]);
+		d = getDateRangeParameter(SERVICESTOPTIME, isISO);
+		p.setServiceStopTimeFrom(d[0]);
+		p.setServiceStopTimeTo(d[1]);
+		d  = getDateRangeParameter(CREATIONTIME, isISO);
+		p.setCreationTimeFrom(d[0]);
+		p.setCreationTimeTo(d[1]);
+		return p;
+		
+	}
+	
+	
+	public SearchParameters getABBIAPIParameters()
+	{
+		return getCommonAPIParameters(true);
+	}
+	
+	/** Get the search parameters, per the FHIR xdsentry specification.
+	 * Extracts the search parameters from the query string.
+	 * n : integer	Starting offset of the first record to return in the search set
+	 * count : integer	Number of return records requested. The server is not bound to conform
+	 * id : token	The id of the resource [NOT SUPPORTED]
+	 * repositoryId : string	repository - logical or literal url  [NOT SUPPORTED]
+	 * mimeType : string	mime type of document
+	 * format : qtoken	format (urn:.. Following rules)
+	 * class : qtoken	particular kind of document
+	 * type : qtoken	precise kind of document
+	 * documentId : string	document id - logical or literal url [NOT SUPPORTED]
+	 * availability : string	Approved | Deprecated [NOT SUPPORTED]
+	 * confidentiality : qtoken	as defined by Affinty Domain
+	 * created : date	date equal to time author created document
+	 * created-before : date	date before or equal to time author created document
+	 * created-after : date	date after or equal to time author created document
+	 * event : qtoken	main clinical act(s)
+	 * language : string	human language (RFC 3066)
+	 * folderId : qtoken	folders this document is in
+	 * patientId : qtoken	subject of care of the document
+	 * patientInfo : qtoken	demographic details
+	 * author.name : string	name of human/machine
+	 * author.id : qtoken	id of human/machine
+	 * facilityType : qtoken	type of organizational setting
+	 * practiceSetting : qtoken	clinical speciality of the act
+	 * homeCommunity : string	globally unique community id
+	 * service.start : date	date equal to Start time
+	 * service.start-before : date	date before or equal to Start time
+	 * service.start-after : date	date after or equal to Start time
+	 * service.stop : date	date equal to Stop time
+	 * service.stop-before : date	date before or equal to Stop time
+	 * service.stop-after : date	date after or equal to Stop time
+	 * comments : string	comments as specified by affinity domain
+	 * @return
+	 */
+	public SearchParameters getFHIRAPIParameters()
+	{
+		return getCommonAPIParameters(false);
+	}
+	
+	/** Get search parameters for MHD from the query and return them
+	 * typeCode
+	 * practiceSettingCode
+	 * creationTimeFrom
+	 * creationTimeTo
+	 * serviceStartTimeFrom
+	 * serviceStartTimeTo
+	 * serviceStopTimeFrom
+	 * serviceStopTimeTo
+	 * formatCode
+	 * mimeType (not an MHD parameter)
+	 * @return the Search parameters found.
+	 */
+	public SearchParameters getMHDAPIParameters()
+	{
+		SearchParameters p = new SearchParameters();
+		
+		// Now we get the various parameters
+		p.setPatientID(getParameter(PATIENTID));
+
+		// Get the content parameter.  If it is equal to "include"
+		// then mark it as included, otherwise mark it as not included.
+		
+		p.setContentIncluded("include".equals(getParameter(CONTENT)));
+		// Get coded parameters
+		
+		p.setClasses(getArrayParameter("classCode", searchAPI.getSupportedClasses()));
+		p.setFormat(getArrayParameter("formatCode", searchAPI.getSupportedFormats()));
+		p.setMimeType(getArrayParameter(MIMETYPE, null));
+		
+		// translate mimeType shortcuts.  These are always passed through
+		// in the long form to the back end.
+		String mimeType[] = p.getMimeType();
+		if (mimeType != null)
+			for (int i = 0; i < mimeType.length; i++)
+			{	if (mimeTypeMap.containsKey(mimeType [i]))
+				{	List<String> s = mimeTypeMap.get(mimeType[i]);
+					mimeType[i] = s.get(0);
+				}
+			}
+		
+		// Get paging parameters
+		p.setIndex((int)getIntParameter(N));
+		p.setCount((int)getIntParameter(COUNT));
+		
 		// Get time parameters
-		p.setServiceStartTimeFrom(getISODateParameter(SERVICESTARTTIMEFROM));
-		p.setServiceStopTimeFrom(getISODateParameter(SERVICESTOPTIMEFROM));
-		p.setServiceStartTimeTo(getISODateParameter(SERVICESTARTTIMETO));
-		p.setServiceStopTimeTo(getISODateParameter(SERVICESTOPTIMETO));
-		p.setCreationTimeFrom(getISODateParameter(CREATIONTIMEFROM)); 
-		p.setCreationTimeTo(getISODateParameter(CREATIONTIMETO));
+		p.setServiceStartTimeFrom(getISODateParameter("serviceStartTimeFrom"));
+		p.setServiceStartTimeTo(getISODateParameter("serviceStartTimeTo"));
+		p.setServiceStopTimeFrom(getISODateParameter("serviceStopTimeFrom"));
+		p.setServiceStopTimeTo(getISODateParameter("serviceStopTimeTo"));
+		p.setCreationTimeFrom(getISODateParameter("creationTimeFrom")); 
+		p.setCreationTimeTo(getISODateParameter("creationTimeTo"));
 		
 		return p;
 	}
-	
+
 	public Feed processQuery(API.Mode searchMode, String outputFormat)
 	{
-		SearchParameters p = getAPIParameters();
+		SearchParameters p = null;
+		
+		switch (searchMode) {
+		case ABBI:
+			p = getABBIAPIParameters();
+			break;
+		case MHD:
+			p = getMHDAPIParameters();
+			break;
+		case FHIR:
+			p = getFHIRAPIParameters();
+			break;
+		}
 		if (p.getOutputFormat() == null)
 			p.setOutputFormat(outputFormat);
 		
@@ -320,6 +480,9 @@ public class SearchProcessor {
 		{	sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "Not Implemented");		
 			return null;
 		}
+		
+		if (isStrict() && hasErrors)
+			return null;
 		
 		// TODO: At this point, we need to get the patientID from the 
 		// authenticated principal we've identified based on the

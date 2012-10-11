@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Login Test: Error logging in</title>
+<script type='text/javascript' src='/ABBI/script/ga.js'></script>
 </head>
 <body bgcolor="#FFFFFF">
 <h1>Error Logging In</h1>

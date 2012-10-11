@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Protocol Test Page</title>
+<script type='text/javascript' src='/ABBI/script/ga.js'></script>
 </head>
 <body>
 	<h1>Prototype Test Page</h1>
