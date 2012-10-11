@@ -1,16 +1,17 @@
 <html>
 	<head>
 		<title>Document Search</title>
+		<script type='text/javascript' src='/ABBI/script/ga.js'></script>
 	</head>
 	<body>
 		<h1>Document Search</h1>
 		<h2>URL Format</h2>
 		<p class="URL">
-			https://abbi-motorcycleguy.rhcloud.com/search[.atom|.json]?[<a href="#patientID">patientID</a>=<i>patientID</i>]
+			https://abbi-motorcycleguy.rhcloud.com/search[.atom|.json]?[<a href="#patientId">patientId</a>=<i>patientId</i>]
 			[&amp;<a href="#content">content</a>=include|link] [&amp;<a href="#mimeType">mimeType</a>=<i>mimeType</i>] 
 			[&amp;<a href="#format">format</a>=<i>format</i>] 
-			[&amp;<a href="#serviceStartTime">serviceStartTimeFrom</a>|serviceStopTimeFrom|serviceStartTimeTo|serviceStopTimeTo=<i>YYYYMMDD</i>]
-			[&amp;<a href="#creationTime">creationTimeFrom</a>|creationTimeTo=<i>YYYYMMDD</i>]
+			[&amp;<a href="#serviceStartTime">service.start-after</a>|service.start-before|service.stop-after|service.stop-before=<i>YYYYMMDD</i>]
+			[&amp;<a href="#creationTime">created-after</a>|created-before=<i>YYYYMMDD</i>]
 			[&amp;<a href="#count">n</a>=<i>index</i>][&amp;<a href="#count">count</a>=<i>count</i>]
 		</p>
 		<p>If .atom is appended to the search path, results will be supplied in 
@@ -23,7 +24,7 @@
 		about supported suffixes in the error page.
 		</p>
 		<h2>Query Parameters</h2>
-		<h3 id="patientID">patientID</h3>
+		<h3 id="patientId">patientId</h3>
 		<p>The patient whose record is being searched can often be determined by the credentials used to access the 
 		service.  However, a single set of credentials may be authorized to access multiple patient records.  
 		This parameter allows the specific patient whose records are to be accessed to be identified when more than 
@@ -94,13 +95,13 @@
 		</table>
 		<p>This parameter corresponds to the IHE MHD classCode parameter, but simplifies the implementation.</p>
 		<p>This parameter may be repeated.</p>
-		<h3 id="serviceStartTime">serviceStartTimeFrom, serviceStartTimeTo, serviceEndTimeFrom, serviceEndTimeTo</h3>
+		<h3 id="serviceStartTime">service.start-after, service.start-before, service.stop-after, service.stop-before</h3>
 		<p>These parameters allow content to be filtered by the associated date of service.  The date is specified in YYYYMMDD format.  
-		Parameters specify the lower and upper bounds such that serviceStartTimeTo &gt; serviceStartTime &gt;= serviceStartTimeFrom and 
-		serviceStopTimeTo &gt; serviceStopTime &gt;= serviceStopTimeFrom. 
+		Parameters specify the lower and upper bounds such that serviceStart-before &gt;= serviceStart &gt;= serviceStart-after and 
+		serviceStop-before &gt;= serviceStop &gt;= serviceStop-after. 
 		</p>
 		<p>These parameters may not be repeated.</p>
-		<h3 id="creationTime">creationTimeFrom, creationTimeTo</h3>
+		<h3 id="creationTime">created-after, created-before</h3>
 		<p>These parameters allow content to be filtered by the content creation time.  The date is specified in YYYYMMDD format.</p>
 		<p>These parameters may not be repeated.</p>
 		<h3 id="count">count, n</h3>

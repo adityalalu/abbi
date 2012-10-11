@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Login</title>
+<script type='text/javascript' src='/ABBI/script/ga.js'></script>
 </head>
 <body>
 <%

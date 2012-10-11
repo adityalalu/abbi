@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>ABBI</title>
+<script type='text/javascript' src='/ABBI/script/ga.js'></script>
 </head>
 <body>
 	<h1>Welcome to the ABBI Prototype Home Page</h1>
@@ -37,13 +38,16 @@
 	</p>
 	<p>The front-end servlet is configured through the <a href="/ABBI/api/doc/search.api.mapping.properties.htm">search.api.mapping.properties</a> file 
 	residing in the WEB-INF folder of the application.</p>
+	<h2>Source Code</h2>
+	<p>Source Code resides (for now) in an SVN Repository in <a href='http://code.google.com/p/abbi/'>Google Code</a></p>
+	<p>Java Doc for the code can be found <a href='/ABBI/api/javadoc'>here</a> (a lot needs to be written).</p>
 	<h2>To Do List</h2>
 	<p>There is a fairly extensive list of things to do.  If you are familiar with Java, Tomcat, 
 	and/or OHT, I could use help with these.  Feel free to 
 	<a href="mailto:keith.boone@ge.com">e-mail me</a>.</p>
 	<ul>
 	<li>Access Document Content through different protocols</li>
-	<li>Add Search Parameters to MHD and FHIR Protocols</li>
+	<li><strike>Add Search Parameters to MHD and FHIR Protocols</strike></li>
 	<li>Support the JSON Output format for the FHIR Protocol</li>
 	<li>Support for pagination (and result caching) in the API</li>
 	<li>Updated Documentation</li>
