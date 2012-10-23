@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>OAuthFilter</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<!-- Security Constraints for your application -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>SecurePages</web-resource-name>
+			<description>Security constraint Resources</description>
+			<!-- The Authorization Page is Secured as you would secure any normal application page -->
+			<url-pattern>/Test.jsp</url-pattern>
+			<url-pattern>/Authorize.jsp</url-pattern>
+			<!-- Additional application pages secured by this constraint -->
+		</web-resource-collection>
+
+		<auth-constraint>
+			<description>only let users login </description>
+			<role-name>User</role-name>
+		</auth-constraint>
+
+		<user-data-constraint>
+			<description>SSL not required (Change to CONFIDENTIAL for deployment)</description>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	
+	<login-config>
+   		<auth-method>FORM</auth-method>
+   		<form-login-config>
+   			<form-login-page>/Login.jsp</form-login-page>
+   			<form-error-page>/Login.jsp?invalid=invalid</form-error-page>
+   		</form-login-config>
+   	</login-config>
+ 
+	<security-role>
+	    <description>The User ROLE</description>
+	    <role-name>User</role-name>
+ 	</security-role>
+	
+	<!-- Declare the OAuth Filter -->
+	<filter>
+	   <filter-name>OAuth Filter</filter-name>
+	   <filter-class>org.scribe.servlet.OAuthFilter</filter-class>
+		<!-- The class to use for the OAuth Provider -->
+	   <init-param>
+	   	<param-name>Provider</param-name>
+	   	<param-value>org.scribe.provider.OAuthProvider10a</param-value>
+	   </init-param>
+	   <!-- The class to use for the token repository -->
+	   <init-param>
+	   	<param-name>Repository</param-name>
+	   	<param-value>org.scribe.provider.MemoryRepository</param-value>
+	   </init-param>
+	   <!-- The String to use to identify the Authentication Realm -->
+	   <init-param>
+	   	<param-name>Realm</param-name>
+	   	<param-value>OAuth</param-value>
+	   </init-param>
+	   <!-- The authorization page. -->
+	   <init-param>
+	   	<param-name>AuthorizationPage</param-name>
+	   	<param-value>/Authorize.jsp</param-value>
+	   </init-param>
+	</filter>
+	
+	
+	<!-- Apply the OAuth Filter all pages in the authorization workflow -->
+	<filter-mapping>
+      <filter-name>OAuth Filter</filter-name>
+      <url-pattern>/oauth/*</url-pattern>
+    </filter-mapping>
+	<!-- Including the Authorization page.  If that page is named
+	     something other than Authorize.jsp, update 
+	 -->
+    <filter-mapping>
+      <filter-name>OAuth Filter</filter-name>
+      <url-pattern>/Authorize.jsp</url-pattern>
+    </filter-mapping>
+        
+	<!-- Apply the OAuth Filter to API calls that require authentication -->
+	<filter-mapping>
+      <filter-name>OAuth Filter</filter-name>
+      <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+    
+    <!-- Declare the OAuth Servlet to implement the Authorization Workflow -->
+	<servlet>
+	   <servlet-name>OAuth Servlet</servlet-name>
+	   <servlet-class>org.scribe.servlet.OAuthServlet</servlet-class>
+	</servlet>
+	<!-- Map the OAuth Servlet to CONTEXT/oauth/* -->
+	<servlet-mapping>
+	   <servlet-name>OAuth Servlet</servlet-name>
+	   <url-pattern>/oauth/*</url-pattern>
+	</servlet-mapping>
+</web-app>
