@@ -7,14 +7,14 @@
 		<h1>Document Search</h1>
 		<h2>URL Format</h2>
 		<p class="URL">
-			https://abbi-motorcycleguy.rhcloud.com/search[.atom|.json]?[<a href="#patientId">patientId</a>=<i>patientId</i>]
+			https://abbi-motorcycleguy.rhcloud.com/search[.xml|.json]?[<a href="#patientId">patientId</a>=<i>patientId</i>]
 			[&amp;<a href="#content">content</a>=include|link] [&amp;<a href="#mimeType">mimeType</a>=<i>mimeType</i>] 
 			[&amp;<a href="#format">format</a>=<i>format</i>] 
 			[&amp;<a href="#serviceStartTime">service.start-after</a>|service.start-before|service.stop-after|service.stop-before=<i>YYYYMMDD</i>]
 			[&amp;<a href="#creationTime">created-after</a>|created-before=<i>YYYYMMDD</i>]
 			[&amp;<a href="#count">n</a>=<i>index</i>][&amp;<a href="#count">count</a>=<i>count</i>]
 		</p>
-		<p>If .atom is appended to the search path, results will be supplied in 
+		<p>If .xml is appended to the search path, results will be supplied in 
 		<a href="http://tools.ietf.org/html/rfc4287" target="_blank">application/atom+xml</a> format as 
 		described <a href="search.atom.htm">here</a>.  If .json is appended to the search path, results will be supplied in 
 		<a href="http://tools.ietf.org/html/rfc4627" target="_blank">application/json</a> format as described <a href="search.json.htm">here</a>.  
@@ -53,7 +53,7 @@
 				<a href='http://www.astm.org' target="_blank">ASTM</a>'s <a href="http://www.astm.org/Standards/E2369.htm" target="_blank">CCR</a></td></tr>
 				<tr><td>text/html</td>
 					<td>HTML suitable for rendering, including <a href="http://www.w3.org/TR/html4/" target="_blank">HTML 4</a>, 
-					<a href="http://www.w3.org/TR/html/" target="_blank">XHTML, and <a href="http://www.w3.org/TR/html5/" target="_blank">HTML 5</td></tr>
+					<a href="http://www.w3.org/TR/html/" target="_blank">XHTML</a>, and <a href="http://www.w3.org/TR/html5/" target="_blank">HTML 5</a></td></tr>
 				<tr><td>text/plain</td>
 					<td>A simple text file, such as might be produced using the original Blue Button interface</td></tr>
 				<tr><td>application/pdf</td>
@@ -66,10 +66,10 @@
 		</table>
 		<p>Shortened forms for mime type are allowed, where only subtype (xml, html, plain, pdf or json) need be specified.</p>
 		<p>This parameter may be repeated.</p>
-		<h3 type="format">format</h3>
+		<h3 id="format">format</h3>
 		<p>The text/xml mime type can represent information using a variety of different schemas representing different information 
 		models.  The purpose of this parameter is to allow users to request information conforming to a specific information models.
-		<p>Three values must be supported for this parameter: CCR, CCD & CCDA</p>
+		<p>Three values must be supported for this parameter: CCR, CCD &amp; CCDA</p>
 		<table>
 			<tr><th>Value</th><th>Description</th></tr>
 			<tr><td>CCR</td><td>Content formatted using the ASTM CCR Standard</td></tr>

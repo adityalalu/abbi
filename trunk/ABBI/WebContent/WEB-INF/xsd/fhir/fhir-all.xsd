@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  © HL7 (http://hl7.org)
+  Generated on Wed, Nov 14, 2012 09:38+1100 for FHIR v0.06
+-->
+<xs:schema xmlns="http://hl7.org/fhir" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://hl7.org/fhir" elementFormDefault="qualified" version="0.06">
+  <xs:include schemaLocation="provenance.xsd"/>
+  <xs:include schemaLocation="xdsentry.xsd"/>
+  <xs:include schemaLocation="conformance.xsd"/>
+  <xs:include schemaLocation="documentheader.xsd"/>
+  <xs:include schemaLocation="device.xsd"/>
+  <xs:include schemaLocation="animal.xsd"/>
+  <xs:include schemaLocation="agent.xsd"/>
+  <xs:include schemaLocation="organization.xsd"/>
+  <xs:include schemaLocation="prescription.xsd"/>
+  <xs:include schemaLocation="profile.xsd"/>
+  <xs:include schemaLocation="valueset.xsd"/>
+  <xs:include schemaLocation="problem.xsd"/>
+  <xs:include schemaLocation="test.xsd"/>
+  <xs:include schemaLocation="messageheader.xsd"/>
+  <xs:include schemaLocation="securityevent.xsd"/>
+  <xs:include schemaLocation="assessmentscale.xsd"/>
+  <xs:include schemaLocation="patient.xsd"/>
+  <xs:include schemaLocation="issuereport.xsd"/>
+  <xs:include schemaLocation="person.xsd"/>
+  <xs:include schemaLocation="labreport.xsd"/>
+  <xs:include schemaLocation="xdsfolder.xsd"/>
+
+</xs:schema>

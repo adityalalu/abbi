@@ -1,7 +1,6 @@
 package org.siframework.abbi.api.xds;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,17 +14,18 @@ import org.openhealthtools.ihe.xds.metadata.AuthorType;
 import org.openhealthtools.ihe.xds.metadata.CodedMetadataType;
 import org.openhealthtools.ihe.xds.metadata.DocumentEntryType;
 import org.openhealthtools.ihe.xds.response.DocumentEntryResponseType;
-import org.siframework.abbi.api.Logger;
+import org.siframework.abbi.api.Context;
 import org.siframework.abbi.api.SearchParameters;
 
 import org.siframework.abbi.atom.Entry;
 import org.siframework.abbi.atom.impl.EntryImpl;
 import org.siframework.abbi.servlet.Search;
+import org.siframework.abbi.utility.IO;
 
 import com.google.gson.*;
 
 public class MHDXDSFormatter implements XDSFormatter {
-
+	
 	public class AuthorAdapter implements JsonSerializer<AuthorType> {
 	
 		@Override
@@ -226,27 +226,23 @@ public class MHDXDSFormatter implements XDSFormatter {
 		}
 	}
 
+	String baseURL = null;
 	public MHDXDSFormatter(SearchParameters search) {
-		// TODO Auto-generated constructor stub
+		baseURL = search.getBaseURL();
 	}
 
-	// TODO: entry must contain the document path
 	@Override
-	public Entry format(DocumentEntryResponseType der, Logger log)
+	public Entry format(DocumentEntryResponseType der, Context log)
 	{
 		StringBuffer b = new StringBuffer();
 		String json = null;
 		Entry e = new EntryImpl();
-		try {
-			String uuid = der.getDocumentEntry().getEntryUUID();
-			e.setId(new URI(uuid));
-			uuid = "/Document/" + uuid.substring(uuid.lastIndexOf(':')+1);
-			e.setContentSrc(new URI(uuid));
-		} catch (URISyntaxException e2) {
-			log.log("Error generating document id", e2);
-		}
-		try {
-			Gson gson = new GsonBuilder()
+		String uuid = der.getDocumentEntry().getEntryUUID();
+		e.setId(uuid);
+		uuid = baseURL + "/Document/" + uuid.substring(uuid.lastIndexOf(':')+1);
+		e.setContentSrc(uuid);
+
+		Gson gson = new GsonBuilder()
 		     .registerTypeAdapter(CX.class, new CXAdapter())
 		     .registerTypeAdapter(XCN.class, new XCNAdapter())
 		     .registerTypeAdapter(XON.class, new XONAdapter())
@@ -256,22 +252,9 @@ public class MHDXDSFormatter implements XDSFormatter {
 		     .registerTypeAdapter(DocumentEntryResponseType.class, new DocumentEntryResponseAdapter())
 		     .setPrettyPrinting()
 		     .create();
-			json = gson.toJson(der, DocumentEntryResponseType.class);
-			e.setContentType(Search.JSON);
-			
-		}
-		catch (Throwable t)
-		{
-			log.log("Not sure what happened here: ", t);
-		}
-		byte data[];
-		
-		try {
-			data = json.getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e1) {
-			throw new Error("UTF-8 Not Supported", e1);
-		}
-		e.setContent(new ByteArrayInputStream(data));
+		json = gson.toJson(der, DocumentEntryResponseType.class);
+		e.setContentType(Search.JSON_MIMETYPE);
+		e.setContent(IO.toUTF8Stream(json));
 		return e;
 	}
 

@@ -2,10 +2,9 @@ package org.siframework.abbi.api.xds;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
@@ -13,8 +12,10 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.openhealthtools.ihe.common.hl7v2.CX;
 import org.openhealthtools.ihe.common.hl7v2.XCN;
@@ -23,55 +24,51 @@ import org.openhealthtools.ihe.xds.metadata.AuthorType;
 import org.openhealthtools.ihe.xds.metadata.CodedMetadataType;
 import org.openhealthtools.ihe.xds.metadata.DocumentEntryType;
 import org.openhealthtools.ihe.xds.response.DocumentEntryResponseType;
-import org.siframework.abbi.api.Logger;
+import org.siframework.abbi.api.Context;
 import org.siframework.abbi.api.SearchParameters;
 import org.siframework.abbi.atom.Entry;
-import org.siframework.abbi.atom.XML;
+import org.siframework.abbi.atom.XMLMarshaller;
 import org.siframework.abbi.atom.impl.CategoryImpl;
 import org.siframework.abbi.atom.impl.EntryImpl;
+import org.siframework.abbi.servlet.Search;
+import org.siframework.abbi.utility.IO;
+import org.siframework.abbi.utility.XML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class FHIRXDSFormatter implements XDSFormatter {
 
 	public static final String availabilityStatusMap[] = { 
 		"Submitted", "Approved", "Deprecated", "Withdrawn"
 	};
+	// The FHIR Namespace
+	public static final String FHIRNS = "http://hl7.org/fhir";
+	public static final String XHTMLNS = "http://www.w3.org/1999/xhtml";
 
-
+	String outputFormat = null;
+	String baseURL = null;
 	public FHIRXDSFormatter(SearchParameters search) {
-		// TODO Auto-generated constructor stub
+		outputFormat = search.getOutputFormat();
+		baseURL = search.getBaseURL();
 	}
 
 
 	@Override
-	// TODO: entry must contain the document path
-	public Entry format(DocumentEntryResponseType der, Logger log)
+	public Entry format(DocumentEntryResponseType der, Context ctx)
 	{
 		DocumentEntryType de = der.getDocumentEntry();
 		EntryImpl e = new EntryImpl();
 		
-		Document d = null;
-		try {
-			d = XML.createDocument();
-		} catch (ParserConfigurationException ex) {
-			log.log("Parse Error", ex);
-			return null;
-		}
 		
 		String uuid = der.getDocumentEntry().getEntryUUID();
-		try {
-			e.setId(new URI(uuid));
-			uuid = "/xdsentry/@" + URLEncoder.encode(uuid.substring(uuid.lastIndexOf(':')+1));
-			e.setContentSrc(new URI(uuid));
-		} catch (Exception ex) {
-			log.log("Error setting entry id", ex);
-		}
+		e.setId(uuid);
+		uuid = URLEncoder.encode(uuid.substring(uuid.lastIndexOf(':')+1));
+		e.setContentSrc(baseURL + "/xdsentry/@" + uuid);
 		
 		e.setPublished(new Date());
 		
-		/* TODO
-		 * Set the author to the author of the submission set, and updated to the
+		/* TODO Set the author to the author of the submission set, and updated to the
 		 * timestamp on the submission set that updated this entry
 		 */
 		/*
@@ -81,51 +78,44 @@ public class FHIRXDSFormatter implements XDSFormatter {
 			e.setUpdated(null); // TODO Figure this out.
 		*/
 		
-		try {
-			e.getCategories().add(new CategoryImpl("XdsEntry", new URI("http://hl7.org/fhir/sid/fhir/resource-types")));
-		} catch (URISyntaxException e3) {
-			log.log("URI Malfunction", e3);
-		}
+		e.getCategories().add(new CategoryImpl("XdsEntry", "http://hl7.org/fhir/sid/fhir/resource-types"));
 
-		Element xdsEntry = d.createElementNS(XML.FHIRNS, "XdsEntry");
+		Document d = XML.createDocument();
+		Element xdsEntry = d.createElementNS(FHIRNS, "XdsEntry");
 		Element te;
-		xdsEntry.setAttribute("xmlns", XML.FHIRNS);   // Is this necessary?
+		xdsEntry.setAttribute("xmlns", FHIRNS);   // Is this necessary?
 		d.appendChild(xdsEntry);
 		
-		XML.append(xdsEntry, te = d.createElementNS(XML.FHIRNS, "id"));
+		XML.append(xdsEntry, te = d.createElementNS(FHIRNS, "id"));
 		// The ID of this resource is the XDSDocumentEntryUUID
 		te.appendChild(d.createTextNode(de.getEntryUUID()));
-		try {
-			e.setId(new URI(de.getEntryUUID()));
-		} catch (URISyntaxException e2) {
-			// TODO Auto-generated catch block
-			log.log("Bad Id: " + de.getEntryUUID(), e2);
-		}
-		XML.append(xdsEntry, XML.createSimple(d, "repositoryId", de.getRepositoryUniqueId()));
+		e.setId(de.getEntryUUID());
+		
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "repositoryId", de.getRepositoryUniqueId()));
 
-		XML.append(xdsEntry, XML.createSimple(d, "mimeType",de.getMimeType()));
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "mimeType",de.getMimeType()));
 		XML.append(xdsEntry, createCode(d, "format", de.getFormatCode()));
 		XML.append(xdsEntry, createCode(d, "class", de.getClassCode()));
 		XML.append(xdsEntry, createCode(d, "type", de.getTypeCode()));
-		XML.append(xdsEntry, XML.createSimple(d, "title", MetadataUtil.asString(de.getTitle())));
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "title", MetadataUtil.asString(de.getTitle())));
 		e.setTitle(MetadataUtil.asString(de.getTitle()));
 		
-		XML.append(xdsEntry, XML.createSimple(d, "documentId", de.getUniqueId()));
-		XML.append(xdsEntry, XML.createSimple(d, "availability", 
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "documentId", de.getUniqueId()));
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "availability", 
 			availabilityStatusMap[de.getAvailabilityStatus().getValue()]
 		));
 		
 		for (CodedMetadataType code: (List<CodedMetadataType>)de.getConfidentialityCode())
 			XML.append(xdsEntry, createCode(d, "confidentiality", code));
 		
-		XML.append(xdsEntry, XML.createSimple(d, "created", MetadataUtil.reformatISODate(de.getCreationTime())));
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "created", MetadataUtil.reformatISODate(de.getCreationTime())));
 
 		for (CodedMetadataType code: (List<CodedMetadataType>)de.getEventCode())
 			XML.append(xdsEntry, createCode(d, "event", code));
 
-		XML.append(xdsEntry, XML.createSimple(d, "hash", de.getHash()));
-		XML.append(xdsEntry, XML.createSimple(d, "size", de.getSize()));
-		XML.append(xdsEntry, XML.createSimple(d, "language", de.getLanguageCode()));
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "hash", de.getHash()));
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "size", de.getSize()));
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "language", de.getLanguageCode()));
 
 		CX pid = de.getPatientId();
 		XML.append(xdsEntry,
@@ -153,33 +143,75 @@ public class FHIRXDSFormatter implements XDSFormatter {
 		
 		XML.append(xdsEntry, createCode(d, "facilityType", de.getHealthCareFacilityTypeCode()));
 		XML.append(xdsEntry, createCode(d, "practiceSetting", de.getPracticeSettingCode()));
-		XML.append(xdsEntry, XML.createSimple(d, "homeCommunity", der.getHomeCommunityId()));
-		Element service = d.createElementNS(XML.FHIRNS, "service");
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "homeCommunity", der.getHomeCommunityId()));
+		Element service = d.createElementNS(FHIRNS, "service");
 		xdsEntry.appendChild(service);
-		XML.append(service, XML.createSimple(d, "start", MetadataUtil.reformatISODate(de.getServiceStartTime())));
-		XML.append(service, XML.createSimple(d, "stop", MetadataUtil.reformatISODate(de.getServiceStopTime())));
-		XML.append(xdsEntry, XML.createSimple(d, "comments", MetadataUtil.asString(de.getComments())));
+		XML.append(service, XMLMarshaller.createSimple(d, "start", MetadataUtil.reformatISODate(de.getServiceStartTime())));
+		XML.append(service, XMLMarshaller.createSimple(d, "stop", MetadataUtil.reformatISODate(de.getServiceStopTime())));
+		XML.append(xdsEntry, XMLMarshaller.createSimple(d, "comments", MetadataUtil.asString(de.getComments())));
+		
+		Element attachment = d.createElementNS(FHIRNS, "attachment");
+		XML.append(attachment, XMLMarshaller.createSimple(d, "mimeType", de.getMimeType()));
+		
+		XML.append(attachment, XMLMarshaller.createSimple(d, "url", baseURL + "/Document/"+uuid));
+
+		// TODO Should be ISO-639-3, but I don't like that
+		XML.append(attachment, XMLMarshaller.createSimple(d, "lang", de.getLanguageCode()));
+		
+		xdsEntry.appendChild(attachment);
+		
 		//<text><!-- 1..1 Narrative Text summary of organization, fall back for human interpretation --></text>
 		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		StreamResult r = new StreamResult(bos);
-		DOMSource s = new DOMSource(xdsEntry);
+		DOMSource unfinishedXdsEntry = new DOMSource(xdsEntry);
 		
 		Transformer t;
 		try {
+			DOMResult finishedXdsEntry = new DOMResult();
 			TransformerFactory tf = TransformerFactory.newInstance();
-			// TODO Generate <text> and <summary> content by applying
-			// stylesheets to the existing resource content.  For now,
-			// we just copy it.
+			InputStream is = ctx.getResource("/WEB-INF/xsl/xdsentryText.xsl");
+			t = tf.newTransformer(new StreamSource(is));
+			t.setOutputProperty("omit-xml-declaration", "yes");
+			t.setOutputProperty("indent", "yes");
+			t.transform(unfinishedXdsEntry, finishedXdsEntry);
+			
+			t.transform(unfinishedXdsEntry, new StreamResult(System.err));
+			
+			// Then find the <div> element inside of it.
+			Document finishedDoc = (Document)finishedXdsEntry.getNode();
+			NodeList divList = finishedDoc.getElementsByTagNameNS(XHTMLNS, "div");
+
+			// Create an identity transformer
 			t = tf.newTransformer();
 			t.setOutputProperty("omit-xml-declaration", "yes");
-			t.transform(s, r);
-			e.setContent(new ByteArrayInputStream(bos.toByteArray()));
-			e.setContentType("text/xml");
+			t.setOutputProperty("indent", "yes");
+
+			// If there was one, write it out to a string
+			if (divList.getLength() != 0)
+			{	DOMSource divElement = new DOMSource(divList.item(0));
+				StringWriter w = new StringWriter();
+				t.transform(divElement, new StreamResult(w));
+				// And set that string as the summary
+				e.setSummary(w.getBuffer().toString());
+				System.err.println(w.getBuffer().toString());
+			}
+			
+
+			if (Search.ATOM_MIMETYPE.equals(outputFormat))
+			{	// copy the xdsEntryResult to a byte array
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				t.transform(new DOMSource(finishedDoc), new StreamResult(bos));
+				e.setContent(new ByteArrayInputStream(bos.toByteArray()));
+				e.setContentType("text/xml");
+			}
+			else if (Search.JSON_MIMETYPE.equals(outputFormat))
+			{	String json = FHIR2JSON.toJson(finishedDoc);
+				e.setContent(new ByteArrayInputStream(IO.toUTF8(json)));
+				e.setContentType("application/json");
+			}
 		} 
 		catch (Exception e1) 
 		{
-			log.log("Transformation Error", e1);
+			ctx.log("Transformation Error", e1);
 		}
 		
 		return e;
@@ -188,10 +220,10 @@ public class FHIRXDSFormatter implements XDSFormatter {
 
 	public Element createAuthenticator(Document d, XCN authenticator)
 	{
-		Element e = d.createElementNS(XML.FHIRNS, "authenticator");
+		Element e = d.createElementNS(FHIRNS, "authenticator");
 		XML.append(e, createIdentifier(d, authenticator));
 		XML.append(e, createName(d, authenticator));
-		return e;
+		return e.hasChildNodes() ? e : null;
 	}
 
 
@@ -210,13 +242,13 @@ public class FHIRXDSFormatter implements XDSFormatter {
 		  <contact><!-- 0..* Contact contact details for author --></contact>
 		 </author>
 		 */
-		Element e = d.createElementNS(XML.FHIRNS, "author");
+		Element e = d.createElementNS(FHIRNS, "author");
 		XML.append(e, createName(d, author.getAuthorPerson()));
 		XML.append(e, createIdentifier(d, author.getAuthorPerson()));
 		for (String v: (List<String>)author.getAuthorRole())
-			XML.append(e, XML.createSimple(d, "role", v));
+			XML.append(e, XMLMarshaller.createSimple(d, "role", v));
 		for (String v: (List<String>)author.getAuthorSpeciality())
-			XML.append(e, XML.createSimple(d, "speciality", v));
+			XML.append(e, XMLMarshaller.createSimple(d, "speciality", v));
 		for (XON xon: (List<XON>)author.getAuthorInstitution())
 			XML.append(e, createInstitution(d, xon));
 		return e;
@@ -225,10 +257,10 @@ public class FHIRXDSFormatter implements XDSFormatter {
 
 	public Element createCode(Document d, String name, CodedMetadataType code)
 	{
-		Element e = d.createElementNS(XML.FHIRNS, name);
-		XML.append(e, XML.createSimple(d, "code", code.getCode()));
-		XML.append(e, XML.createSimple(d, "system", code.getSchemeUUID()));
-		XML.append(e, XML.createSimple(d, "display", MetadataUtil.asString(code.getDisplayName())));
+		Element e = d.createElementNS(FHIRNS, name);
+		XML.append(e, XMLMarshaller.createSimple(d, "code", code.getCode()));
+		XML.append(e, XMLMarshaller.createSimple(d, "system", code.getSchemeUUID()));
+		XML.append(e, XMLMarshaller.createSimple(d, "display", MetadataUtil.asString(code.getDisplayName())));
 		return e;
 	}
 
@@ -246,9 +278,9 @@ public class FHIRXDSFormatter implements XDSFormatter {
 		else if ("DNS".equals(idType))
 			pre = "socket:";
 		
-		Element e = d.createElementNS(XML.FHIRNS, name);
-		XML.append(e, XML.createSimple(d, "system", pre + system));
-		XML.append(e, XML.createSimple(d, "id", id));
+		Element e = d.createElementNS(FHIRNS, name);
+		XML.append(e, XMLMarshaller.createSimple(d, "system", pre + system));
+		XML.append(e, XMLMarshaller.createSimple(d, "id", id));
 		return e;
 	}
 
@@ -257,8 +289,6 @@ public class FHIRXDSFormatter implements XDSFormatter {
 	{
 		if (person == null)
 			return null;
-		
-		String idType = person.getAssigningAuthorityUniversalIdType();
 	
 		return createIdentifier(d, "id",
 				person.getAssigningAuthorityUniversalIdType(), 
@@ -280,9 +310,9 @@ public class FHIRXDSFormatter implements XDSFormatter {
 
 	public Element createInstitution(Document d, XON inst)
 	{
-		Element e = d.createElementNS(XML.FHIRNS, "institution");
+		Element e = d.createElementNS(FHIRNS, "institution");
 		XML.append(e, createIdentifier(d, inst));
-		XML.append(e, XML.createSimple(d, "name", inst.getOrganizationName()));
+		XML.append(e, XMLMarshaller.createSimple(d, "name", inst.getOrganizationName()));
 		return e;
 	}
 
@@ -292,7 +322,7 @@ public class FHIRXDSFormatter implements XDSFormatter {
 		if (person == null)
 			return null;
 		
-		Element name = d.createElementNS(XML.FHIRNS, "name");
+		Element name = d.createElementNS(FHIRNS, "name");
 		XML.append(name, createNamePart(d, "prefix", person.getPrefix()));
 		XML.append(name, createNamePart(d, "given", person.getGivenName()));
 		XML.append(name, createNamePart(d, "given", person.getOtherName()));
@@ -306,9 +336,9 @@ public class FHIRXDSFormatter implements XDSFormatter {
 	{	if (type == null || value == null || value.length() == 0 || type.length() == 0)
 			return null;
 	
-		Element part = d.createElementNS(XML.FHIRNS, "part");
-		XML.append(part, XML.createSimple(d, "type", type));
-		XML.append(part, XML.createSimple(d, "value", value));
+		Element part = d.createElementNS(FHIRNS, "part");
+		XML.append(part, XMLMarshaller.createSimple(d, "type", type));
+		XML.append(part, XMLMarshaller.createSimple(d, "value", value));
 		return part;
 	}
 }

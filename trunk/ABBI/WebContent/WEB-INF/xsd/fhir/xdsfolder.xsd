@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  © HL7 (http://hl7.org)
+  Generated on Wed, Nov 14, 2012 09:38+1100 for FHIR v0.06 
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hl7.org/fhir" xmlns:xhtml="http://www.w3.org/1999/xhtml" targetNamespace="http://hl7.org/fhir" elementFormDefault="qualified" version="0.06">
+  <xs:include schemaLocation="fhir-base.xsd"/>
+  <xs:element name="XdsFolder" type="XdsFolder">
+    <xs:annotation>
+      <xs:documentation>todo</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="XdsFolder">
+    <xs:sequence>
+      <xs:element name="code" minOccurs="1" maxOccurs="unbounded" type="Coding">
+        <xs:annotation>
+          <xs:documentation>contain the set of codes specifying the type of clinical activity that resulted in placing XDS Documents in this XDSFolder</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="title" minOccurs="0" maxOccurs="1" type="string">
+        <xs:annotation>
+          <xs:documentation>Represents the title of the Folder</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="patientId" minOccurs="1" maxOccurs="1" type="Identifier">
+        <xs:annotation>
+          <xs:documentation>the subject of care medical record Identifier as defined by the Document Source.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="homeCommunity" minOccurs="0" maxOccurs="1" type="string">
+        <xs:annotation>
+          <xs:documentation>A globally unique identifier for a community</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="comments" minOccurs="0" maxOccurs="1" type="string">
+        <xs:annotation>
+          <xs:documentation>Comments associated with the Folder</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="extension" type="Extension" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>See Extensions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="text" type="Narrative" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Text summary of resource (for human interpretation)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

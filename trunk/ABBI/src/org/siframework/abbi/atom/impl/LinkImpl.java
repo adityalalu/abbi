@@ -3,28 +3,35 @@
  */
 package org.siframework.abbi.atom.impl;
 
-import java.net.URI;
-
 import org.siframework.abbi.atom.Link;
 
 /**
- * @author 212042380
- *
+ * A simple Java Bean implementing a Link
+ * @author Keith W. Boone
  */
 public class LinkImpl implements Link {
 
-	private URI href = null;
+	private String href = null;
 	private String rel = null, title = null, language = null, mimeType = null;
 	private int length = 0;
 	
-	public LinkImpl(URI href, String rel, String mimeType)
+	/**
+	 * Construct a new Link
+	 * @param href	The URL to which the link goes
+	 * @param rel	The relationship of the link
+	 * @param mimeType	The content type of the link
+	 */
+	public LinkImpl(String href, String rel, String mimeType)
 	{	this.href = href;
 		this.rel = rel;
 		this.mimeType = mimeType;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.siframework.abbi.atom.Link#getHref(java.net.URI)
+	 */
 	@Override
-	public URI getHref() {
+	public String getHref() {
 		return href;
 	}
 
@@ -32,7 +39,7 @@ public class LinkImpl implements Link {
 	 * @see org.siframework.abbi.atom.Link#setHref(java.net.URI)
 	 */
 	@Override
-	public void setHref(URI href) {
+	public void setHref(String href) {
 		this.href = href;
 	}
 

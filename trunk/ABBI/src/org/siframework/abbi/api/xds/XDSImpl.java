@@ -41,13 +41,13 @@ import org.openhealthtools.ihe.xds.response.XDSRetrieveResponseType;
 
 import org.siframework.abbi.api.API;
 import org.siframework.abbi.api.SearchParameters;
-import org.siframework.abbi.api.Logger;
-import org.siframework.abbi.api.Util;
+import org.siframework.abbi.api.Context;
 import org.siframework.abbi.atom.Entry;
 import org.siframework.abbi.atom.Person;
 import org.siframework.abbi.atom.impl.CategoryImpl;
 import org.siframework.abbi.atom.impl.EntryImpl;
 import org.siframework.abbi.atom.impl.PersonImpl;
+import org.siframework.abbi.utility.DT;
 
 public class XDSImpl implements API {
 	private B_Consumer registry = null;
@@ -69,7 +69,7 @@ public class XDSImpl implements API {
 	private final static Date 
 		YESTERYEAR = new Date(0),				  	// The ePoch Date (before the internet)
 		TOMORROWLAND = new Date(15778800000000l);  	// 450+ years into the future
-
+	
 	// This stores the Audit configuration for the AuditorModule.
 	private AuditorModuleConfig amc = null;
 
@@ -78,6 +78,8 @@ public class XDSImpl implements API {
 	public static final AvailabilityStatusType APPROVED[] = { 
 		AvailabilityStatusType.APPROVED_LITERAL
 	};
+	
+	// TODO: API Maps should be handled by the Front-End, not the back end.
 	/**
 	 * Read through the properties keys, and build mappings from
 	 * API inputs to XDS code values
@@ -120,24 +122,27 @@ public class XDSImpl implements API {
 		}
 	}
 	
-	public Map<String,URI> getRepositoryMap(Properties properties, Logger log)
+	public Map<String,URI> getRepositoryMap(Properties properties, Context log)
 	{
 		Map<String,String> repositoryId = new HashMap<String,String>();
 		Map<String,String> repositoryUrl = new HashMap<String,String>();
 		Map<String,URI> repositoryMap = new HashMap<String, URI>();
+		String repositoryKey = this.getClass().getName() + ".repository.";
+		
 		for (Map.Entry<Object, Object> p: properties.entrySet())
 		{	
 			String prop = (String) p.getKey();
 			String value = (String)p.getValue();
 			
-			if (prop.startsWith("repository."))
-			{	String parts[] = prop.split("\\\\.");
-				if (parts.length != 3)
+			if (prop.startsWith(repositoryKey))
+			{	prop = prop.substring(repositoryKey.length());
+				String parts[] = prop.split("\\\\.");
+				if (parts.length != 2)
 					log.log("Invalid repository property: " + prop);
-				else if ("id".equals(parts[1]))
-					repositoryId.put(parts[2], value);
-				else if ("url".equals(parts[1]))
-					repositoryUrl.put(parts[2], value);
+				else if ("id".equals(parts[0]))
+					repositoryId.put(parts[1], value);
+				else if ("url".equals(parts[0]))
+					repositoryUrl.put(parts[1], value);
 				else
 					log.log("Invalid repository property syntax: " + prop);
 			}
@@ -151,9 +156,9 @@ public class XDSImpl implements API {
 			String id = repositoryId.get(key);
 			String url = repositoryUrl.get(key);
 			if (id == null)
-				log.log("Missing repository.id." + key + " value");
+				log.log("Missing "+repositoryKey+".id." + key + " value");
 			else if (url == null)
-				log.log("Missing repository.url." + key + " value");
+				log.log("Missing "+repositoryKey+".url." + key + " value");
 			else
 			{	try
 				{
@@ -177,13 +182,13 @@ public class XDSImpl implements API {
 	 * @param log	The logger where errors should be reported.
 	 */
 	@Override
-	public void init(Properties properties, Logger log) throws ServletException
+	public void init(Properties properties, Context log) throws ServletException
 	{
 		try {
 			URI uri;
 			String regURI = null;
 			
-			regURI = properties.getProperty("registry");
+			regURI = properties.getProperty(this.getClass().getName()+".registry");
 			if (regURI == null)
 				throw new ServletException("Missing registry parameter in properties.");
 			uri = new URI(regURI);
@@ -207,83 +212,11 @@ public class XDSImpl implements API {
 		// Set the map to repositories.
 		registry.setRepositoryMap(getRepositoryMap(properties, log));
 		
-		idSource = properties.getProperty("source");
+		idSource = properties.getProperty(this.getClass().getName()+".source");
 		if (idSource == null)
 			throw new ServletException("Missing source in properties");
 		
 		buildAPIMaps(properties);
-	}
-	
-	public Entry formatAsABBI(DocumentEntryResponseType der, Logger log)
-	{
-		// Create a new feed entry
-		Entry e = new EntryImpl();
-		
-		// Set the title to the document title
-		e.setTitle(MetadataUtil.asString(der.getDocumentEntry().getTitle()));
-		
-		// Set the summary to the document comments (if present) 
-		e.setSummary(
-				MetadataUtil.asString(der.getDocumentEntry().getComments())
-			);
-
-		// Set the author names
-		EList<AuthorType> eAuthors = (EList<AuthorType>)der.getDocumentEntry().getAuthors();
-		ArrayList<Person> al = new ArrayList<Person>();
-		for (AuthorType auth : eAuthors)
-			al.add(new PersonImpl(MetadataUtil.getName(auth.getAuthorPerson())));
-		e.setAuthors(al);
-		
-		// We retain original categories from the registry for added value.
-		CodedMetadataType classCode = der.getDocumentEntry().getClassCode();
-		try {
-			CategoryImpl classCategory;
-			classCategory = new CategoryImpl(
-				classCode.getCode(), 
-				MetadataUtil.asString(classCode.getDisplayName()), 
-				MetadataUtil.asURI(classCode.getSchemeUUID()), 
-				classCode.getSchemeName()
-			);
-			e.getCategories().add(classCategory);
-		} catch (URISyntaxException e1) {
-			log.log("Cannot create class category for " + MetadataUtil.asString(classCode), e1);
-		}
-		
-		// Store the formatCode as a category
-		CodedMetadataType formatCode = der.getDocumentEntry().getFormatCode();
-		try {
-			CategoryImpl formatCategory;
-			formatCategory = new CategoryImpl(
-				formatCode.getCode(), 
-				MetadataUtil.asString(formatCode.getDisplayName()), 
-				MetadataUtil.asURI(formatCode.getSchemeUUID()), 
-				formatCode.getSchemeName()
-			);
-			e.getCategories().add(formatCategory);
-		} catch (URISyntaxException e1) {
-			log.log("Cannot create format category for " + MetadataUtil.asString(formatCode), e1);
-		}
-
-		String mimeType = der.getDocumentEntry().getMimeType();
-		e.setContentType(mimeType);
-		String entryUUID = der.getDocumentEntry().getEntryUUID();
-		
-		// TODO: Categories based on classCode and formatCode should be mapped back into API Values.
-		
-		// Sent the entry Id to the uuid of the document
-		try {
-			URI uri = MetadataUtil.asURI(entryUUID);
-			e.setId(uri);
-		} catch (URISyntaxException e1) {
-			log.log("Error setting content entry UUID " + der.getDocumentEntry().getEntryUUID(), e1);
-		}
-		
-		// Set the creation and published time for this document.
-		Date creationTime = Util.parseDate(der.getDocumentEntry().getCreationTime());
-		e.setUpdated(creationTime);
-		e.setPublished(creationTime);
-		
-		return e;
 	}
 	
 	@Override
@@ -293,11 +226,11 @@ public class XDSImpl implements API {
 	 * @param log	The logger to use for error reporting.
 	 * @return A populated atom feed containing the relevant entries
 	 */
-	public List<Entry> search(SearchParameters search, Mode searchMode, Logger log) 
+	public List<Entry> search(SearchParameters search, Context log) 
 	{
 		// Perform the XDS Query
 		XDSQueryResponseType response = doXDSQuery(search, log);
-		XDSFormatter formatter = getFormatter(searchMode, search);
+		XDSFormatter formatter = getFormatter(search);
 		
 		// If there was an error, return null
 		if (response == null)
@@ -356,7 +289,7 @@ public class XDSImpl implements API {
 		if (to == null)
 			to = TOMORROWLAND;
 		
-		return new DateTimeRange(name, Util.asUTCString(from), Util.asUTCString(to));
+		return new DateTimeRange(name, DT.asUTCString(from), DT.asUTCString(to));
 	}
 	
 	/**
@@ -365,7 +298,7 @@ public class XDSImpl implements API {
 	 * @param log	A place to write messages.
 	 * @return	The Query result as an XDSQueryResponseType
 	 */
-	protected XDSQueryResponseType doXDSQuery(SearchParameters p, Logger log)
+	protected XDSQueryResponseType doXDSQuery(SearchParameters p, Context log)
 	{
 		// A list of dateTimeRanges to use in searching.
         ArrayList<DateTimeRange> dateTimeRanges = 
@@ -439,17 +372,15 @@ public class XDSImpl implements API {
 	@Override
 	public String getDocumentIdentifier(Entry entry)
 	{
-		URI uuid = entry.getId();
-		if (uuid == null)
+		String uuid = entry.getId();
+		if (uuid == null || uuid.length() == 0)
 			return null;
-		String sUUID = uuid.toString();
-		
 		// Return everything after the last :
-		return sUUID.substring(sUUID.lastIndexOf(':')+1);
+		return uuid.substring(uuid.lastIndexOf(':')+1);
 	}
 
 	WeakHashMap<String, DocumentRequestType> documentRequestCache = new WeakHashMap<String, DocumentRequestType>();
-	public List<DocumentRequestType> fetchDocumentInfo(String documentUuid[], Logger log) 
+	public List<DocumentRequestType> fetchDocumentInfo(String documentUuid[], Context log) 
 	{
 		ArrayList<DocumentRequestType> rq = new ArrayList<DocumentRequestType>();
 		try
@@ -503,7 +434,7 @@ public class XDSImpl implements API {
 	}
 	
 	@Override
-	public Content[] getDocumentContent(String[] documentIdentifiers, String patientId, Logger log) {
+	public Content[] getDocumentContent(String[] documentIdentifiers, String patientId, Context log) {
 		CX pid = getPatientId(patientId);
 		
 		// TODO Implement this.  The challenge is that we must know
@@ -537,13 +468,11 @@ public class XDSImpl implements API {
 
 				@Override
 				public InputStream getContent() {
-					// TODO Auto-generated method stub
 					return entry.getStream();
 				}
 
 				@Override
 				public String getDocumentIdentifier() {
-					// TODO Auto-generated method stub
 					return entry.getDocumentEntryUUID();
 				}
 				
@@ -553,8 +482,8 @@ public class XDSImpl implements API {
 		return contents.toArray(new Content[contents.size()]);
 	}
 
-	public XDSFormatter getFormatter(Mode searchMode, SearchParameters search) {
-		switch (searchMode) {
+	public XDSFormatter getFormatter(SearchParameters search) {
+		switch (search.getSearchMode()) {
 		case ABBI:
 			return new ABBIXDSFormatter(search);
 		case MHD:

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  © HL7 (http://hl7.org)
+  Generated on Wed, Nov 14, 2012 09:38+1100 for FHIR v0.06 
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hl7.org/fhir" xmlns:xhtml="http://www.w3.org/1999/xhtml" targetNamespace="http://hl7.org/fhir" elementFormDefault="qualified" version="0.06">
+  <xs:include schemaLocation="fhir-base.xsd"/>
+  <xs:element name="Person" type="Person">
+    <xs:annotation>
+      <xs:documentation>todo</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="Person">
+    <xs:sequence>
+      <xs:element name="identifier" minOccurs="0" maxOccurs="unbounded" type="HumanId">
+        <xs:annotation>
+          <xs:documentation>Identifier for a person within a particular scope.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="name" minOccurs="0" maxOccurs="unbounded" type="HumanName">
+        <xs:annotation>
+          <xs:documentation>A name associated with the person</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="telecom" minOccurs="0" maxOccurs="unbounded" type="Contact">
+        <xs:annotation>
+          <xs:documentation>A contact detail for the person, e.g. a telephone number or an email address.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="gender" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>Administrative Gender</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="birthDate" minOccurs="0" maxOccurs="1" type="dateTime">
+        <xs:annotation>
+          <xs:documentation>The birth date for the person.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="deceased" minOccurs="0" maxOccurs="1" type="boolean">
+        <xs:annotation>
+          <xs:documentation>Indicates if the Person deceased or not</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address" minOccurs="0" maxOccurs="unbounded" type="Address">
+        <xs:annotation>
+          <xs:documentation>An address for the person</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maritalStatus" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>This field contains the patient's marital (civil) status.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="language" type="Person.Language" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>A language spoken by the person, with proficiency</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="extension" type="Extension" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>See Extensions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="text" type="Narrative" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Text summary of resource (for human interpretation)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Person.Language">
+    <xs:sequence>
+      <xs:element name="languageCode" minOccurs="1" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>The ISO-639-1 alpha 2 code in lower case for the language, optionally followed by a hyphen and the ISO-3166-1 alpha 2 code for the region in upper case. E.g. &quot;en&quot; for English, or &quot;en-US&quot; for American English versus &quot;en-EN&quot; for England English</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="modeCode" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>A value representing the person's method of expression of this language. Examples: expressed spoken, expressed written, expressed signed, received spoken, received written, received signed</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="proficiencyLevelCode" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>A code that describes how well the language is spoken</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="preferenceInd" minOccurs="0" maxOccurs="1" type="boolean">
+        <xs:annotation>
+          <xs:documentation>Indicates whether or not the Person prefers this language (over other languages he masters up a certain level)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

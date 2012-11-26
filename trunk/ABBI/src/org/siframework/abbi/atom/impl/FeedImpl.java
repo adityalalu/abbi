@@ -15,9 +15,15 @@ import org.siframework.abbi.atom.Feed;
 import org.siframework.abbi.atom.Link;
 import org.siframework.abbi.atom.Person;
 
+
+/**
+ * A Simple Java Bean implementing an Atom Feed
+ * @author Keith W. Boone
+ *
+ */
 public class FeedImpl implements Feed  {
 
-	private URI id = null, icon = null, logo = null;
+	private String id = null, icon = null, logo = null;
 	private String generator = null, title = null, subtitle = null, rights = null;
 	private List<Link> links = new LinkedList<Link>(); 
 	private HashSet<Person> authors = new HashSet<Person>(), contributors = new HashSet<Person>();
@@ -26,12 +32,12 @@ public class FeedImpl implements Feed  {
 	private List<Entry> entries = new ArrayList<Entry>();
 	
 	@Override
-	public URI getId() {
+	public String getId() {
 		return id;
 	}
 
 	@Override
-	public void setId(URI id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -77,22 +83,22 @@ public class FeedImpl implements Feed  {
 	}
 
 	@Override
-	public URI getIcon() {
+	public String getIcon() {
 		return icon;
 	}
 
 	@Override
-	public void setIcon(URI icon) {
+	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 
 	@Override
-	public URI getLogo() {
+	public String getLogo() {
 		return logo;
 	}
 
 	@Override
-	public void setLogo(URI logo) {
+	public void setLogo(String logo) {
 		this.logo = logo;
 	}
 

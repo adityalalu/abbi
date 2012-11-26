@@ -18,9 +18,11 @@ public class SearchParameters {
 	private Date serviceStopTimeTo = null;
 	private Date creationTimeFrom = null; 
 	private Date creationTimeTo = null;
-	private String outputFormat = null;
-	private boolean includeContent = false;
 	
+	private String outputFormat = null;
+	private String serviceBaseURL = null;
+	private boolean includeContent = false;
+	private SearchMode searchMode = SearchMode.FHIR;
 	
 	public String getPatientID() {
 		return patientID;
@@ -95,6 +97,7 @@ public class SearchParameters {
 		this.creationTimeTo = creationTimeTo;
 	}
 	
+	// These are control rather than query parameteres
 	public boolean isContentIncluded() {
 		return includeContent;
 	}
@@ -108,4 +111,19 @@ public class SearchParameters {
 	public void setOutputFormat(String outputFormat) {
 		this.outputFormat = outputFormat;
 	}
+	
+	public String getBaseURL() {
+		return serviceBaseURL;
+	}
+	public void setBaseURL(String baseURL) {
+		serviceBaseURL = baseURL;
+	}
+	
+	public void setSearchMode(SearchMode searchMode) {
+		this.searchMode = searchMode;
+	}
+	public SearchMode getSearchMode() {
+		return searchMode;
+	}
+	
 }

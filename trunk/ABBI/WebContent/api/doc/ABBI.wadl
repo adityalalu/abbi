@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="wadl.xsl" ?>
+<application xmlns="http://wadl.dev.java.net/2009/02"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:fhir="http://hl7.org/fhir"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xsi:schemaLocation="http://wadl.dev.java.net/2009/02 file:/C:/MDHT_CDATools_1.1.0/workspace-consol/ABBI/WebContent/WEB-INF/xsd/wadl.xsd">
+  <doc title="ABBI Pull API Documentation">
+    <h:p>This document describes the Automate the Blue Button Initiative
+      RESTful API enabling patients and caregivers access to patient
+      documents. It has been generated via a <h:a href='wadl.xsl'>transform</h:a> of
+      the API <h:a href='ABBI.wadl'>described</h:a> using <h:a href='http://www.w3.org/Submission/wadl/'>WADL</h:a>.
+      This document is divided into three sections:</h:p>
+    <h:ol>
+      <h:li><h:a href="#Summary">Summary</h:a>
+        <h:p>Provides a summary of the API by resource and method.</h:p>
+      </h:li>
+      <h:li><h:a href="#Grammars">Grammars</h:a>
+        <h:p>Provides the schemas that describe resources used in this
+          API.</h:p></h:li>
+      <h:li><h:a href="#Resources">Resources</h:a>
+        <h:p>Describes each resource and the methods and parameters
+          relevant to each resource</h:p>
+      </h:li>
+    </h:ol>
+    <h:h5>Requirements</h:h5>
+    <h:p> The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
+      in this document are to be interpreted as described in <h:a
+        href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</h:a>. </h:p>
+    <h:p>An implementation is not compliant if it fails to satisfy one
+      or more of the MUST or REQUIRED level requirements for the
+      protocols it implements. An implementation that satisfies all the
+      MUST or REQUIRED level and all the SHOULD level requirements for
+      its protocols is said to be "unconditionally compliant"; one that
+      satisfies all the MUST level requirements but not all the SHOULD
+      level requirements for its protocols is said to be "conditionally
+      compliant."</h:p>
+    <h:h6>Server Conformance</h:h6>
+    <h:p>Conformance requirements of servers appears following a heading
+      labeled "Conformance" as in the following examples:</h:p>
+  </doc>
+  <doc title="Conformance">REQUIRED</doc>
+  <doc title="Conformance">OPTIONAL</doc>
+  <doc>
+    <h:p>Conformance can be applied to resources, methods, parameters or
+      parameter values. The table below indicates what it means to
+      conform for each of the above. </h:p>
+    <h:table border="1">
+      <h:tr>
+        <h:th>Component</h:th>
+        <h:th>Server Conformance</h:th>
+      </h:tr>
+      <h:tr>
+        <h:th>Resource</h:th><h:td>The server must support at least all
+          required methods that operate on that resource</h:td>
+      </h:tr>
+      <h:tr>
+        <h:th>Method</h:th><h:td>The server must demonstrate that
+          successful completion of a request can be performed using that
+          method.</h:td>
+      </h:tr>
+      <h:tr>
+        <h:th>Parameter</h:th><h:td>The server must demonstrate that a
+          successful completion of a request can be perfomed using one
+          of the methods to which that parameter applies</h:td>
+      </h:tr>
+      <h:tr>
+        <h:th>Parameter Value</h:th>
+        <h:td>The server must demonstrate that a request can be
+          performed where that parameter value is used.</h:td>
+      </h:tr>
+    </h:table>
+    <h:h6>Client Conformance</h:h6>
+    <h:p>Clients declaring conformance to this specification must
+      demonstrate the ability to generate syntactically correct API
+      calls using the resources, methods, parameters and parameter
+      values in this specification. Clients need not demonstrate
+      conformance to every resource, method, parameter or parameter
+      value required of a server, but MUST demonstrate correct
+      implementation of those API calls that are used, including use of
+      all Required API parameters.</h:p>
+  </doc>
+  <grammars>
+    <include
+      href="file:/C:/MDHT_CDATools_1.1.0/workspace-consol/ABBI/WebContent/WEB-INF/xsd/atom.xsd">
+      <doc><h:p>The ATOM format is used to respond to queries for
+          documents. It contains a list of XdsEntry objects representing
+          the response to the query.</h:p></doc>
+    </include>
+    <include
+      href="file:/C:/MDHT_CDATools_1.1.0/workspace-consol/ABBI/WebContent/WEB-INF/xsd/fhir/xdsentry.xsd">
+      <doc><h:p>An XdsEntry is used to represent metadata for a single
+          document.</h:p></doc>
+    </include>
+  </grammars>
+  <resources base="https://abbi-motorcycleguy.rhcloud.com/ABBI">
+    <doc><h:p>This section describes the resources made accessible
+        through ABBI</h:p></doc>
+    <resource id="XdsEntry" path="xdsentry">
+      <doc><h:p>The XdsEntry resource provide metadata about each
+          document available for a given patient. These resources are
+          typically accessed through the search method. However, each
+          XdsEntry resource has a URL and can be accessed
+          individually.</h:p>
+      </doc>
+      <doc title="Conformance">OPTIONAL</doc>
+      <param required="true" style="header" name="Authorization"
+        type="xs:string">
+        <doc>
+          <h:p>Requires an OAuth 2.0 Token</h:p>
+        </doc>
+      </param>
+      <param required="false" repeating="false" style="query"
+        name="_format" type="xs:string">
+        <doc>
+          <h:p>The _format parameter is provided to enable applications
+            without control over HTTP Headers to specify the format of
+            the resource.</h:p>
+          <h:p>It indicates the format used to represent the XdsEntry
+            resource. Overrides the Accept header if present in GET and
+            search operations, and the Content-Type header in PUT or
+            POST operations.</h:p>
+        </doc>
+        <option value="application/json" mediaType="application/json">
+          <doc>
+            <h:p>The resource will be returned in application/json
+              format as defined <h:a
+                href="http://www.hl7.org/implement/standards/fhir/fhir-book.htm#json"
+                >by HL7 here</h:a>.</h:p>
+          </doc>
+        </option>
+        <option value="json" mediaType="application/json">
+          <doc>
+            <h:p>A synonym for application/json.</h:p>
+          </doc>
+        </option>
+        <option value="text/fhir+xml" mediaType="text/fhir+xml">
+          <doc>
+            <h:p>The resource appears as an XdsEntry element using the
+              text/fhir+xml format as defined <h:a
+                href="http://www.hl7.org/implement/standards/fhir/fhir-book.htm#xdsentry"
+                >by HL7 here</h:a>.</h:p>
+          </doc>
+        </option>
+        <option value="text/xml" mediaType="text/fhir+xml">
+          <doc>
+            <h:p>A synonym for text/fhir+xml.</h:p>
+          </doc>
+        </option>
+        <option value="xml" mediaType="text/fhir+xml">
+          <doc>
+            <h:p>A synonym for text/fhir+xml.</h:p>
+          </doc>
+        </option>
+      </param>
+      <method name="POST">
+        <doc>
+          <h:p>Create a new XdsEntry resource.</h:p>
+          <h:dl><h:dt>NOTE:</h:dt>
+            <h:dd>Some servers may also support PUT with the same
+              semantics.</h:dd>
+          </h:dl>
+        </doc>
+        <doc title="Conformance"><h:p>OPTIONAL</h:p></doc>
+        <request>
+          <param required="false" style="header" name="Content-Type"
+            type="xs:string">
+            <doc><h:p>Specifies the Content-Type of the POST
+              body.</h:p></doc>
+            <option value="application/json"
+              mediaType="application/json">
+              <doc>
+                <h:p>The body represents an XdsEntry in application/json
+                  format as defined <h:a
+                    href="http://www.hl7.org/implement/standards/fhir/fhir-book.htm#json"
+                    >by HL7 here</h:a>.</h:p>
+              </doc>
+            </option>
+            <option value="text/fhir+xml" mediaType="text/fhir+xml">
+              <doc><h:p>The body is an XdsEntry element using the
+                  text/fhir+xml format as defined <h:a
+                    href="http://www.hl7.org/implement/standards/fhir/fhir-book.htm#xdsentry"
+                    >by HL7 here</h:a>.</h:p>
+              </doc>
+            </option>
+            <option value="text/xml" mediaType="text/fhir+xml">
+              <doc>
+                <h:p>A synonym for text/fhir+xml.</h:p>
+              </doc>
+            </option>
+          </param>
+        </request>
+        <response status="201">
+          <doc title="Created"><h:p>The resource has been created. The
+              body contains a copy of the new resource in the specified
+              mime type.</h:p></doc>
+          <param name="Location" style="header" type="xs:uri">
+            <doc><h:p>A version-aware Location header which contains the
+                new location and id of the created resource.</h:p></doc>
+            <doc title="Example"
+                ><h:pre>[path]/@{new-id}/history/@{new-vid}</h:pre></doc>
+          </param>
+        </response>
+        <response status="400">
+          <doc title="Bad Request"><h:p>The resource could not be
+              parsed.</h:p></doc>
+        </response>
+        <response status="404">
+          <doc title="Not Found"><h:p>Resource type not supported or not
+              a FHIR end point.</h:p></doc>
+        </response>
+        <response status="490">
+          <doc title="Talk to the Hand"><h:p> the proposed resource
+              violated server business rules. This should be accompanied
+              by an Issue resource providing additional
+            detail</h:p></doc>
+          <representation mediaType="text/fhir+xml">
+            <doc><h:p>A description of the issue. See <h:a
+                  href="http://www.hl7.org/implement/standards/fhir/fhir-book.htm#issuereport"
+                  >IssueReport</h:a> for details on the
+              content.</h:p></doc>
+          </representation>
+        </response>
+      </method>
+      <resource path="latest">
+        <doc>
+          <h:p>This resource is simply an alias for the latest XdsEntry
+            resource containing a clinical summary for this
+            patient.</h:p>
+        </doc>
+        <doc title="Conformance"><h:p>REQUIRED</h:p></doc>
+        <method name="GET">
+          <doc>
+            <h:p>Retrieves (or constructs) the XdsEntry for the latest
+              clinical summary available for a patient</h:p>
+          </doc>
+          <doc title="Conformance"><h:p>REQUIRED</h:p></doc>
+        </method>
+      </resource>
+      <resource path="search">
+        <doc>
+          <h:p>This resource produces an atom feed containing the
+            XdsEntry resources matching the query parameters.</h:p>
+        </doc>
+        <doc title="Conformance"><h:p>REQUIRED</h:p></doc>
+        <method name="GET">
+          <doc>
+            <h:p>Retrieves an atom feed containing the set of XdsEntry
+              resources matching the search criteria.</h:p>
+            <h:p>Several of the query parameters can be repeated. To
+              repeat a parameter, specify it multiple times as separate
+              query parameters. For example, to request content that is
+              available in either xml or html format, you would use
+              mimeType=xml&amp;mimeType=html in the query
+              parameter.</h:p>
+          </doc>
+          <doc title="Conformance"><h:p>REQUIRED</h:p></doc>
+          <request>
+            <param required="false" repeating="true" style="query"
+              name="mimeType" type="fhir:code-simple">
+              <doc><h:p>Various mime types and/or information models can
+                  be used to represent different kinds of content,
+                  including summary notes, discharge notes, operative
+                  notes, et cetera. This parameter filters the responses
+                  to ensure that only specified notes are included. The
+                  following values are supported: </h:p></doc>
+              <option value="text/xml">
+                <doc><h:p> Documents supporting the text/xml mime type.
+                    These include XML formats such as <h:a
+                      href="http://www.hl7.org">HL7</h:a>'s <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=7"
+                      >CDA</h:a> (including <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=6"
+                      >CCD</h:a> or <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=258"
+                      >CCDA</h:a>) or <h:a href="http://www.astm.org/"
+                      >ASTM</h:a>'s <h:a
+                      href="http://www.astm.org/Standards/E2369.htm"
+                      >CCR</h:a>. </h:p></doc>
+              </option>
+              <option value="xml">
+                <doc><h:p> An alias for text/xml. </h:p></doc>
+              </option>
+              <option value="text/html">
+                <doc><h:p> Documents rendered in the text/html mime
+                    type. This includes any HTML suitable for rendering,
+                    including <h:a href="http://www.w3.org/TR/html4/"
+                      >HTML 4</h:a>, <h:a
+                      href="http://www.w3.org/TR/html/">XHTML</h:a> or
+                      <h:a href="http://www.w3.org/TR/html5/">HTML
+                      5</h:a>. </h:p></doc>
+              </option>
+              <option value="html">
+                <doc><h:p> An alias for text/html. </h:p></doc>
+              </option>
+              <option value="text/plain">
+                <doc><h:p> A document rendered as a simple text file,
+                    such as might be produced using the original Blue
+                    Button interface. </h:p></doc>
+              </option>
+              <option value="text">
+                <doc><h:p> An alias for text/plain. </h:p></doc>
+              </option>
+              <option value="plain">
+                <doc><h:p> Another alias for text/plain. </h:p></doc>
+              </option>
+              <option value="application/pdf">
+                <doc><h:p> A document rendered using the <h:a
+                      href="http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/PDF32000_2008.pdf"
+                      >Portable Document Format</h:a>, including <h:a
+                      href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=38920"
+                      >PDF/A</h:a>. </h:p></doc>
+              </option>
+              <option value="pdf">
+                <doc><h:p>An alias for application/pdf.</h:p></doc>
+              </option>
+              <option value="application/json">
+                <doc><h:p> A document rendered in the format specified
+                    in <h:a href="http://www.irt.org/rfc/rfc4627.htm"
+                      >RFC 4627</h:a>. </h:p></doc>
+              </option>
+              <option value="json">
+                <doc><h:p>An alias for application/json.</h:p></doc>
+              </option>
+            </param>
+            <param required="false" repeating="true" style="query"
+              name="format" type="xs:code-simple">
+              <doc><h:p>The text/xml mime type can represent information
+                  using a variety of different schemas representing
+                  different information models. The purpose of this
+                  parameter is to allow users to request information
+                  conforming to a specific information models.
+                </h:p></doc>
+              <option value="CCR">
+                <doc><h:p> Content formatted using the ASTM <h:a
+                      href="http://www.astm.org/Standards/E2369.htm"
+                      >CCR</h:a> Standard </h:p></doc>
+              </option>
+              <option value="CCD">
+                <doc><h:p> Content formatted using the HL7 CDA Standard
+                    that conforms to the <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=6"
+                      >Continuity of Care Document Release 1.0</h:a>
+                  </h:p></doc>
+              </option>
+              <option value="CCDA">
+                <doc><h:p> Content formatted using the HL7 CDA Standard
+                    that conforms to the <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=258"
+                      >Consolidated CDA Specification (including CCD
+                      1.1)</h:a>
+                  </h:p></doc>
+              </option>
+            </param>
+            <param required="false" repeating="true" style="query"
+              name="class" type="fhir:code-simple">
+              <doc><h:p>Various mime types and/or information models can
+                  be used to represent different kinds of content,
+                  including summary notes, discharge notes, operative
+                  notes, et cetera. This parameter filters the responses
+                  to ensure that only specified notes are
+                  included.</h:p>
+              </doc>
+              <doc title="Example">
+                <h:pre>class=HandP&amp;class=Consult</h:pre>
+              </doc>
+              <option value="Summaries">
+                <doc><h:p>Summary records using CCD (1.0 or 1.1) and/or
+                    CCR</h:p></doc>
+              </option>
+              <option value="HandP">
+                <doc><h:p>History and Physical Notes</h:p></doc>
+              </option>
+              <option value="Consult">
+                <doc><h:p>Consultation Notes</h:p></doc>
+              </option>
+              <option value="Discharge">
+                <doc><h:p>Discharge Summaries</h:p></doc>
+              </option>
+              <option value="Operative">
+                <doc><h:p>Operative Notes</h:p></doc>
+              </option>
+              <option value="Procedure">
+                <doc><h:p>Procedure Notes</h:p></doc>
+              </option>
+              <option value="Progess">
+                <doc><h:p>Progress Notes</h:p></doc>
+              </option>
+              <option value="Imaging">
+                <doc><h:p>Imaging Reports</h:p></doc>
+              </option>
+              <option value="Lab">
+                <doc><h:p>Laboratory Studies</h:p></doc>
+              </option>
+            </param>
+            <param required="false" repeating="false" style="query"
+              name="service.start-after" type="fhir:dateTime-simple">
+              <doc><h:p>Filters entries starting on or after the
+                  specified time.</h:p>
+                <h:h4 id="timezone">Time Zone</h:h4>
+                <h:p>If time is specified, the time zone may be
+                  specified. If time is not specified, time zone is not
+                  permitted. When time zone is not specified, behavior
+                  with respect to time zone is not specified. The server
+                  may assume local time, local time of the querying
+                  system, or some other fixed time zone.</h:p></doc>
+              <doc title="Examples">
+                <h:p>To specify services starting after 6:00am on
+                  January 1, 2012 in the Eastern Time
+                    Zone:<h:pre>[path]?service.start-after=2012-01-01T06:00-05:00</h:pre></h:p>
+                <h:p>To specify services starting after 6:00am on
+                  January 1, 2012 with no time zone
+                    <h:pre>[path]?service.start-after=2012-01-01T06:00</h:pre></h:p>
+              </doc>
+            </param>
+            <param required="false" repeating="false" style="query"
+              name="service.start-before" type="fhir:dateTime-simple">
+              <doc>
+                <h:p>Filters entries starting before the specified time.
+                  See <h:a href="timezone">notes on time zone</h:a>
+                  above.</h:p>
+              </doc>
+              <doc title="Examples">
+                <h:p>To specify all services starting on January 1, 2012
+                    <h:pre>[path]?service.start-after=2012-01-01&amp;service.start-before=2012-01-02</h:pre>
+                </h:p>
+                <h:p>To specify all services starting before January 1,
+                  2012
+                    <h:pre>[path]?service.start-before=2012-01-01</h:pre>
+                </h:p>
+              </doc>
+            </param>
+            <param required="false" repeating="false" style="query"
+              name="service.stop-after" type="fhir:dateTime-simple">
+              <doc><h:p>Filters entries stopping on or after the
+                  specified time. See <h:a href="timezone">notes on time
+                    zone</h:a> above.</h:p></doc>
+              <doc title="Examples">
+                <h:p>To specify only services that occured on on the
+                  date of January 1, 2012
+                    <h:pre>[path]?service.start-before=2012-01-02&amp;service.stop-after=2012-01-01</h:pre>
+                </h:p>
+                <h:p>To specify only services that occured between the
+                  hours of noon and 1pm on the date of January 1, 2012
+                    <h:pre>[path]?service.start-before=2012-01-01T13:00:00&amp;service.stop-after=2012-01-01T12:00:00</h:pre>
+                </h:p>
+              </doc>
+            </param>
+            <param required="false" repeating="false" style="query"
+              name="service.stop-before" type="fhir:dateTime-simple">
+              <doc><h:p>Filters entries stopping before the specified
+                  time</h:p>. See <h:a href="timezone">notes on time
+                  zone</h:a> above.</doc>
+            </param>
+            <param required="false" repeating="false" style="query"
+              name="created-after" type="fhir:dateTime-simple">
+              <doc><h:p>Filters entries created on or after the
+                  specified time</h:p>. See <h:a href="timezone">notes
+                  on time zone</h:a> above.</doc>
+            </param>
+            <param required="false" repeating="false" style="query"
+              name="created-before" type="fhir:dateTime-simple">
+              <doc><h:p>Filters entries created before the specified
+                  time</h:p>. See <h:a href="timezone">notes on time
+                  zone</h:a> above.</doc>
+            </param>
+            <param required="false" repeating="false" style="query"
+              name="_count" type="xs:positiveInteger" default="1">
+              <doc><h:p>Starting offset of the first resource to return
+                  in the search set.</h:p>
+                <h:p>The _count and _n parameters allow the content of
+                  the atom feed (or it’s JSON equivalent) to be
+                  paginated. The value of _n specifies the ordinal
+                  position of the first record to be returned. The
+                  _count parameter specifies the maximum number of
+                  records desired. The server must honor the value in
+                  the n parameter, or return a 501 Not Implemented error
+                  if it does not support pagination. It should honor the
+                  count parameter. </h:p>
+                <h:dl><h:dt>NOTE:</h:dt><h:dd>Pagination may return
+                    inconsistent results between calls when new content
+                    is being made available.</h:dd></h:dl>
+              </doc>
+              <doc title="Example">
+                <h:p>To retrieve 10 resources:
+                    <h:pre>[path]?_count=10</h:pre>
+                </h:p>
+              </doc>
+            </param>
+            <param required="false" repeating="false" style="query"
+              name="_n" type="xs:positiveInteger">
+              <doc><h:p>Number of return resources requested. The server
+                  is not bound to conform</h:p></doc>
+              <doc title="Example"><h:p>To return the most recent
+                  entry.</h:p></doc>
+              <doc title="Ordering of Responses">
+                <h:p>In order for pagination to work, responses must
+                  have a defined order. Responses are ordered by by
+                  document creation time (from most to least recent),
+                  and then by document identifier to ensure consistent
+                  order. When results are being aggregated across
+                  multiple systems (e.g., through a federated query),
+                  the overall results and ordering may vary between
+                  calls. Pagination is defined as a convenience
+                  mechanism, but cannot guarantee that the same results
+                  will be provided between calls.</h:p>
+              </doc>
+              <doc title="Example">
+                <h:p>To retrieve starting at the 11<sup>th</sup>
+                  resource: <h:pre>[path]?_n=11</h:pre>
+                </h:p>
+              </doc>
+            </param>
+          </request>
+        </method>
+      </resource>
+      <resource path="@{entryID}">
+        <doc>
+          <h:p>This is the XdsEntry resource specified by the entryId
+            parameter.</h:p>
+        </doc>
+        <doc title="Conformance"><h:p>REQUIRED</h:p></doc>
+        <param required="true" style="template" name="entryId"
+          type="xs:string">
+          <doc><h:p>Specifies the XdsEntry resource to operate on by its
+              unique identifier</h:p></doc>
+        </param>
+        <method name="GET">
+          <doc>
+            <h:p>Retrieve the specified XdsEntry resource.</h:p>
+          </doc>
+          <doc title="Conformance"><h:p>REQUIRED</h:p></doc>
+          <request>
+            <param required="false" style="header" name="Accept"
+              type="xs:string">
+              <doc>Indicates the format to return the resource in.</doc>
+              <option value="application/json"
+                mediaType="application/json">
+                <doc><h:p>See documentation above for the format
+                    parameter</h:p></doc>
+              </option>
+              <option value="text/xml" mediaType="text/fhir+xml">
+                <doc><h:p>See documentation above for the format
+                    parameter</h:p></doc>
+              </option>
+              <option value="text/fhir+xml" mediaType="text/fhir+xml">
+                <doc><h:p>See documentation above for the format
+                    parameter</h:p></doc>
+              </option>
+            </param>
+          </request>
+        </method>
+        <method name="POST">
+          <doc>
+            <h:p>Update the specified XdsEntry resource.</h:p>
+          </doc>
+          <doc title="Conformance"><h:p>OPTIONAL</h:p></doc>
+          <request>
+            <param required="false" style="header" name="Content-Type"
+              type="xs:string">
+              <doc><h:p>Specifies the Content-Type of the POST
+                  body.</h:p></doc>
+              <option value="application/json"
+                mediaType="application/json">
+                <doc>
+                  <h:p>The body represents an XdsEntry in
+                    application/json format as defined <h:a
+                      href="http://www.hl7.org/implement/standards/fhir/fhir-book.htm#json"
+                      >by HL7 here</h:a>.</h:p>
+                </doc>
+              </option>
+              <option value="text/fhir+xml" mediaType="text/fhir+xml">
+                <doc><h:p>The body is an XdsEntry element using the
+                    text/fhir+xml format as defined <h:a
+                      href="http://www.hl7.org/implement/standards/fhir/fhir-book.htm#xdsentry"
+                      >by HL7 here</h:a>.</h:p>
+                </doc>
+              </option>
+              <option value="text/xml" mediaType="text/fhir+xml">
+                <doc>
+                  <h:p>A synonym for text/fhir+xml.</h:p>
+                </doc>
+              </option>
+            </param>
+          </request>
+        </method>
+        <method name="DELETE">
+          <doc>
+            <h:p>Delete the specified XdsEntry.</h:p>
+          </doc>
+          <doc title="Conformance"><h:p>OPTIONAL</h:p></doc>
+          <response status="204">
+            <doc title="No Content"><h:p>Returned if the deletion is
+                successful. Subsequent attempts to access the resource
+                will result in an error (e.g., 404 Not Found or 410
+                Gone).</h:p></doc>
+          </response>
+          <response status="405">
+            <doc title="Method Not Allowed"><h:p>Returned if resource
+                deletion is not supported by the server.</h:p></doc>
+          </response>
+          <response status="409">
+            <doc title="Conflict"><h:p>Returned if the server refuses to
+                delete a resource because of reasons specific to that
+                resource, such as referential integrity.</h:p></doc>
+          </response>
+        </method>
+      </resource>
+    </resource>
+    <resource id="document" path="Document">
+      <doc>
+        <h:p>This resource represents a document in a patient health
+          record.</h:p>
+      </doc>
+      <doc title="Conformance"><h:p>OPTIONAL</h:p></doc>
+      <param name="Authorization" required="true" type="xs:string"
+        style="header">
+        <doc><h:p>Requires an OAuth 2.0 Token</h:p></doc>
+      </param>
+      <resource path="@{docId}">
+        <doc>
+          <h:p>This resource represents the specified document in the
+            patient's health record.</h:p>
+        </doc>
+        <doc title="Conformance"><h:p>REQUIRED</h:p></doc>
+        <param name="docId" required="true" type="xs:string"
+          style="template">
+          <doc>
+            <h:p>The unique identifier for the document.</h:p>
+          </doc>
+        </param>
+        <method name="GET">
+          <doc>
+            <h:p>Retrieves the specified document.</h:p>
+          </doc>
+          <doc title="Conformance"><h:p>REQUIRED</h:p></doc>
+          <request>
+            <param required="false" repeating="true" style="query"
+              name="mimeType" type="fhir:code-simple">
+              <doc><h:p>Documents can be rendered in various mime types
+                  to represent their content. This parameter identifies
+                  the the mime types that may be used for document
+                  rendering. If more than one mime type is specified,
+                  the server will send the format providing the most
+                  machine-readable information content. XML and JSON are
+                  preferred over HTML, PDF or plain text. HTML and PDF
+                  are preferred over plain text. </h:p>
+                <h:p>When present, this parameter overrides the Accept
+                  header.</h:p>
+              </doc>
+              <option value="text/xml" mediaType="text/xml">
+                <doc><h:p> Documents supporting the text/xml mime type.
+                    These include XML formats such as <h:a
+                      href="http://www.hl7.org">HL7</h:a>'s <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=7"
+                      >CDA</h:a> (including <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=6"
+                      >CCD</h:a> or <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=258"
+                      >CCDA</h:a>) or <h:a href="http://www.astm.org/"
+                      >ASTM</h:a>'s <h:a
+                      href="http://www.astm.org/Standards/E2369.htm"
+                      >CCR</h:a>. </h:p></doc>
+              </option>
+              <option value="xml" mediaType="text/xml">
+                <doc><h:p> An alias for text/xml.</h:p></doc>
+              </option>
+              <option value="text/html" mediaType="text/html">
+                <doc><h:p> Documents will be rendered in the text/html
+                    mime type. This includes any HTML suitable for
+                    rendering, including <h:a
+                      href="http://www.w3.org/TR/html4/">HTML 4</h:a>,
+                      <h:a href="http://www.w3.org/TR/html/">XHTML</h:a>
+                    or <h:a href="http://www.w3.org/TR/html5/">HTML
+                      5</h:a>. </h:p></doc>
+              </option>
+              <option value="html" mediaType="text/html">
+                <doc><h:p> An alias for text/html. </h:p></doc>
+              </option>
+              <option value="text/plain" mediaType="text/plain">
+                <doc><h:p> A document rendered as a simple text file,
+                    such as might be produced using the original Blue
+                    Button interface. </h:p></doc>
+              </option>
+              <option value="text" mediaType="text/plain">
+                <doc><h:p> An alias for text/plain. </h:p></doc>
+              </option>
+              <option value="plain" mediaType="text/plain">
+                <doc><h:p> Another alias for text/plain. </h:p></doc>
+              </option>
+              <option value="application/pdf"
+                mediaType="application/pdf">
+                <doc><h:p> A document rendered using the <h:a
+                      href="http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/PDF32000_2008.pdf"
+                      >Portable Document Format</h:a>, including <h:a
+                      href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=38920"
+                      >PDF/A</h:a>. </h:p></doc>
+              </option>
+              <option value="pdf" mediaType="application/pdf">
+                <doc><h:p>An alias for application/pdf.</h:p></doc>
+              </option>
+              <option value="application/json"
+                mediaType="application/pdf">
+                <doc><h:p> A document rendered in the format specified
+                    in <h:a href="http://www.irt.org/rfc/rfc4627.htm"
+                      >RFC 4627</h:a>. </h:p></doc>
+              </option>
+              <option value="json" mediaType="application/json">
+                <doc><h:p>An alias for application/json.</h:p></doc>
+              </option>
+              <option value="*/*" mediaType="*/*">
+                <doc><h:p>Other formats and aliases may be supported by
+                    the server.</h:p></doc>
+              </option>
+            </param>
+            <param style="header" name="Accept" type="xs:string">
+              <doc><h:p>Servers MAY use the Accept header to identify
+                  which rendering of the document to return. Some
+                  servers ignore the accept header and return the
+                  document in its original mime type.</h:p></doc>
+              <option value="text/xml" mediaType="text/xml">
+                <doc><h:p> Documents supporting the text/xml mime type.
+                    These include XML formats such as <h:a
+                      href="http://www.hl7.org">HL7</h:a>'s <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=7"
+                      >CDA</h:a> (including <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=6"
+                      >CCD</h:a> or <h:a
+                      href="http://www.hl7.org/implement/standards/product_brief.cfm?product_id=258"
+                      >CCDA</h:a>) or <h:a href="http://www.astm.org/"
+                      >ASTM</h:a>'s <h:a
+                      href="http://www.astm.org/Standards/E2369.htm"
+                      >CCR</h:a>. </h:p></doc>
+              </option>
+              <option value="text/html" mediaType="text/html">
+                <doc><h:p> Documents will be rendered in the text/html
+                    mime type. This includes any HTML suitable for
+                    rendering, including <h:a
+                      href="http://www.w3.org/TR/html4/">HTML 4</h:a>,
+                      <h:a href="http://www.w3.org/TR/html/">XHTML</h:a>
+                    or <h:a href="http://www.w3.org/TR/html5/">HTML
+                      5</h:a>. </h:p></doc>
+              </option>
+              <option value="text/plain" mediaType="text/plain">
+                <doc><h:p> A document rendered as a simple text file,
+                    such as might be produced using the original Blue
+                    Button interface. </h:p></doc>
+              </option>
+              <option value="application/pdf"
+                mediaType="application/pdf">
+                <doc><h:p> A document rendered using the <h:a
+                      href="http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/PDF32000_2008.pdf"
+                      >Portable Document Format</h:a>, including <h:a
+                      href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=38920"
+                      >PDF/A</h:a>. </h:p>
+                </doc>
+              </option>
+              <option value="application/json"
+                mediaType="application/json">
+                <doc><h:p> A document rendered in the format specified
+                    in <h:a href="http://www.irt.org/rfc/rfc4627.htm"
+                      >RFC 4627</h:a>. </h:p></doc>
+              </option>
+              <option value="*/*" mediaType="*/*">
+                <doc><h:p>Other formats may be supported by the
+                    server.</h:p></doc>
+              </option>
+            </param>
+          </request>
+        </method>
+      </resource>
+      <method name="PUT">
+        <doc>
+          <h:p>Stores the document.</h:p>
+        </doc>
+        <doc title="Conformance"><h:p>OPTIONAL</h:p></doc>
+        <request>
+          <param style="header" name="Content-Type" type="xs:string"
+            required="true">
+            <doc>
+              <h:p>The mimeType and charset of the content.</h:p>
+            </doc>
+          </param>
+          <param style="query" name="_format" type="xs:string"
+            required="false">
+            <h:p>The mimeType and charset of the content. Overrides the
+              Content-Type header if present.</h:p>
+          </param>
+        </request>
+        <response status="201">
+          <doc title="Created"><h:p>The document was
+            created.</h:p></doc>
+          <param style="header" name="Location" required="true"
+            type="xs:uri">
+            <doc><h:p>A version-aware Location header which contains the
+                new location and id of the created document.</h:p></doc>
+            <doc title="Example"
+                ><h:pre>[path]/@{new-id}/history/@{new-vid}</h:pre></doc>
+          </param>
+        </response>
+        <response status="400">
+          <doc title="Bad Request"><h:p>The document could not be
+              parsed.</h:p></doc>
+        </response>
+        <response status="404">
+          <doc title="Not Found"><h:p>Resource type not supported or not
+              a FHIR end point.</h:p></doc>
+        </response>
+      </method>
+    </resource>
+  </resources>
+</application>
