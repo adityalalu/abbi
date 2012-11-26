@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  © HL7 (http://hl7.org)
+  Generated on Wed, Nov 14, 2012 09:38+1100 for FHIR v0.06 
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hl7.org/fhir" xmlns:xhtml="http://www.w3.org/1999/xhtml" targetNamespace="http://hl7.org/fhir" elementFormDefault="qualified" version="0.06">
+  <xs:include schemaLocation="fhir-base.xsd"/>
+  <xs:element name="Problem" type="Problem">
+    <xs:annotation>
+      <xs:documentation>todo</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="Problem">
+    <xs:sequence>
+      <xs:element name="code" minOccurs="1" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>Identification of the problem or diagnosis. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="category" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>A category assigned to the problem/diagnosis. E.g. finding | problem | diagnosis | concern | condition</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="status" minOccurs="0" maxOccurs="1" type="code">
+        <xs:annotation>
+          <xs:documentation>The clinical status of the problem or diagnosis</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="certainty" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>The degree of confidence that this problem/diagnosis is correct</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="severity" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>A subjective assessment of the severity of the Problem/Diagnosis as evaluated by the clinician.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice minOccurs="0" maxOccurs="1" >
+        <xs:annotation>
+          <xs:documentation>Estimated or actual date the problem/diagnosis began, in the opinion of the clinician</xs:documentation>
+        </xs:annotation>
+        <xs:element name="onsetDate" type="date"/>
+        <xs:element name="onsetAge" type="Age"/>
+      </xs:choice>
+      <xs:element name="dateFound" minOccurs="0" maxOccurs="1" type="date">
+        <xs:annotation>
+          <xs:documentation>Estimated or actual date the problem/diagnosis was first detected/suspected</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice minOccurs="0" maxOccurs="1" >
+        <xs:annotation>
+          <xs:documentation>The date or estimated date that the problem/diagnosis resolved or went into remission</xs:documentation>
+        </xs:annotation>
+        <xs:element name="abatementDate" type="date"/>
+        <xs:element name="abatementAge" type="Age"/>
+        <xs:element name="abatementBoolean" type="boolean"/>
+      </xs:choice>
+      <xs:element name="stage" type="Problem.Stage" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Clinical stage or grade of a problem/diagnosis. May include formal severity assessments</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="evidence" type="Problem.Evidence" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>supporting Evidence / manfiestions that are the basis on which this problem/diagnosis is suspected or confirmed</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="location" type="Problem.Location" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>The anatomical location where this problem/diagnosis manifests itself</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="relatedItem" type="Problem.RelatedItem" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Further problems, diagnoses, procedures or events that are related in some way to this problem/diagnosis, or the substance that caused/triggered this problem</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="extension" type="Extension" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>See Extensions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="text" type="Narrative" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Text summary of resource (for human interpretation)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Problem.Evidence">
+    <xs:sequence>
+      <xs:element name="code" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>A manifestion or symptom that led to the recording of this problem/diagnosis</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="details" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Links to other relevant information, including pathology reports</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Problem.Location">
+    <xs:sequence>
+      <xs:element name="code" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>code that identifies the structural location</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="details" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>detailed and structured anatomical location information</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Problem.Stage">
+    <xs:sequence>
+      <xs:element name="summary" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>A simple summary of the stage such as &quot;Stage 3&quot;. The determination of the stage is disease-specific</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="assessment" minOccurs="0" maxOccurs="unbounded" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Reference to a formal record of the evidence on which the staging assessment is based</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Problem.RelatedItem">
+    <xs:sequence>
+      <xs:element name="type" minOccurs="1" maxOccurs="1" type="ProblemRelationshipType">
+        <xs:annotation>
+          <xs:documentation>The type of relationship that this problem/diagnosis has to the related item</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="target" minOccurs="1" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>target of the relationship </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProblemRelationshipType">
+    <xs:simpleContent>
+      <xs:restriction base="code">
+        <xs:enumeration value="due-to">
+          <xs:annotation>
+            <xs:documentation></xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="follows">
+          <xs:annotation>
+            <xs:documentation></xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

@@ -19,12 +19,14 @@
 	Atom feeds (or application/json content), those extensions will display in the frame.
 	</p>
 	<ul>
-		<li>The ABBI Protocol: <a href="/ABBI/search.atom" 
-			onclick="DocURL.value=this.href" target="results">/ABBI/search.atom</a></li>
+		<li>The ABBI Protocol: <a href="/ABBI/search.xml" 
+			onclick="DocURL.value=this.href" target="results">/ABBI/search.xml</a></li>
 		<li>The IHE MHD Protocol: <a href="/ABBI/net.ihe/DocumentDossier/search" 
 			onclick="DocURL.value=this.href" target="results">/ABBI/net.ihe/DocumentDossier/search</a></li>
-		<li>The HL7 FHIR Protocol: <a href="/ABBI/xdsentry/search" 
-			onclick="DocURL.value=this.href" target="results">/ABBI/xdsentry/search</a></li>
+		<li>The HL7 FHIR Protocol (with XML output): <a href="/ABBI/xdsentry/search.xml" 
+			onclick="DocURL.value=this.href" target="results">/ABBI/xdsentry/search.xml</a></li>
+		<li>The HL7 FHIR Protocol (with JSON output): <a href="/ABBI/xdsentry/search.json" 
+			onclick="DocURL.value=this.href" target="results">/ABBI/xdsentry/search.json</a></li>
 	</ul>
 	<textarea rows="1" cols="98" id="DocURL" disabled='true'></textarea><br/>
 	<iframe name="results" id="results" width="800" height="400" scrolling="yes"></iframe>

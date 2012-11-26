@@ -14,24 +14,24 @@
 	// where the token is gc'd before the request gets back to the application.
 	// In those cases, the user can just log in again.
 	
-	application.setAttribute("OAuthTokenMap", new WeakHashMap<String, Token>());
+	application.setAttribute("OAuthTokenMap", new HashMap<String, Token>());
 	
 	// Allow swapping of OAuth provider
 	boolean useTwitter = request.getParameter("useTwitter") != null;
 	// Create the Twitter Authorization Service
 	OAuthService service = new ServiceBuilder()
                                 .provider(useTwitter ? TwitterApi.class : MyAuthApi.class)
-                                .apiKey("E5yCcZlqEh9qTBZAqQcAg")
-                                .apiSecret("A3P1FdX6mwSY1VF6FXoKq1p9ISpKgYBTb7BiViPeU48")
+                                .apiKey("YLQguzhR2dR6y5M9vnA5m_bJ")
+                                .apiSecret("LaM68B1Pt3DpjAMl9B0.uviY")
                                 .callback("http://localhost:8080/ABBI/authenticate.jsp")
 								.debugStream(System.err)
                                 .build();
-
+// YLQguzhR2dR6y5M9vnA5m_bJ , LaM68B1Pt3DpjAMl9B0.uviY
 	
 	application.setAttribute("OAuthService.Twitter", service);
 	application.setAttribute("account.info.request", 
 			useTwitter ? "https://api.twitter.com/1.1/account/verify_credentials.json" :
-				"http://abbi-motorcycleguy.rhcloud.com//ABBI-Auth/verifyCredentials.jsp");
+				"http://localhost:8080/OAuthFilter/api/verifyCredentials.jsp");
 	String redirect = request.getParameter("redirect");
 	if (redirect != null && redirect.length() != 0)
 		response.sendRedirect(redirect);

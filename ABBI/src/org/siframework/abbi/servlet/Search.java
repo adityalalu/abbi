@@ -2,7 +2,9 @@ package org.siframework.abbi.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
@@ -22,46 +24,71 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.siframework.abbi.api.API;
-import org.siframework.abbi.api.API.Mode;
-import org.siframework.abbi.api.Logger;
+import org.siframework.abbi.api.Context;
+import org.siframework.abbi.api.SearchMode;
+import org.siframework.abbi.api.SearchParameters;
 import org.siframework.abbi.atom.Entry;
 import org.siframework.abbi.atom.Feed;
-import org.siframework.abbi.atom.XML;
+import org.siframework.abbi.atom.JSONMarshaller;
+import org.siframework.abbi.atom.XMLMarshaller;
+import org.siframework.abbi.utility.IO;
+import org.siframework.abbi.utility.XML;
 import org.w3c.dom.Document;
 
-public class Search extends HttpServlet implements Logger {
+/**
+ * The Search class is an HttpServlet that implements the ABBI Protocol.  It serves as the front
+ * end for the ABBI application.
+ * 
+ * To use this servlet, include the following lines in WEB-INF/web.xml in your application.
+ * <servlet>
+ *  	<servlet-name>SearchServlet</servlet-name>
+ *   	<servlet-class>org.siframework.abbi.servlet.Search</servlet-class>
+ *   	<load-on-startup>0</load-on-startup>
+ *	</servlet>
+ *
+ * The servlet uses the URL pattern to figure out which protocol is being queried.  The default
+ * protocol is the ABBI protocol, and operates on end-points that end with /search, /search.atom
+ * or /search.json.  To enable these end-points, add the following servlet mappings to web.xml
+ *	<servlet-mapping>
+ *    	<servlet-name>SearchServlet</servlet-name>
+ *    	<url-pattern>/search</url-pattern>
+ *	</servlet-mapping>
+ *
+ * To support the IHE Mobile Access to Health Documents protocol, the end-point URL must 
+ * contain /net.ihe/ in it.  To activate this protocol, add the following servlet mappings
+ * to the web.xml file.
+ * 	<servlet-mapping>
+ *    	<servlet-name>SearchServlet</servlet-name>
+ *    	<url-pattern>/net.ihe/DocumentDossier/search</url-pattern>
+ *	</servlet-mapping>
+ *	<servlet-mapping>
+ *    	<servlet-name>SearchServlet</servlet-name>
+ *    	<url-pattern>/net.ihe/Document/*</url-pattern>
+ *	</servlet-mapping>
+ *
+ * To support the HL7 FHIR protocol, the end-point URL must contain /xdsentry/.  To activate
+ * this protocol, add the following servlet mappings to the web.xml file. 
+ *	<servlet-mapping>
+ *    	<servlet-name>SearchServlet</servlet-name>
+ *    	<url-pattern>/xdsentry/*</url-pattern>
+ *	</servlet-mapping> 
+ *
+ * @author Keith W. Boone
+ **/
+public class Search extends HttpServlet implements Context {
 
 	// Mime Types for the response
 	public final static 
-		String 	ATOM = "application/atom+xml",
-				JSON = "application/json";
+		String 	ATOM_MIMETYPE = "application/atom+xml",
+				JSON_MIMETYPE = "application/json";
 
 	private Properties properties = new Properties();
 	private API searchAPI = null;
 	
-	public Properties getProperties()
-	{
-		return properties;
-	}
-	
-	public API getAPI()
-	{
-		return searchAPI;
+	public Search() {
 	}
 	
 	@Override
-	public void log(String message)
-	{
-		System.err.println(message);
-	}
-	
-	@Override
-	public void log(String message, Throwable t)
-	{
-		System.err.println(message);
-		t.printStackTrace(System.err);
-	}
-	
 	public void init() throws ServletException
 	{	
 		InputStream is = getServletContext().getResourceAsStream("/WEB-INF/search.api.mapping.properties");
@@ -71,7 +98,7 @@ public class Search extends HttpServlet implements Logger {
 			log("Error loading /WEB-INF/search.api.mapping.properties", e);
 		}
 		
-		String searchAPIClass = properties.getProperty("API");
+		String searchAPIClass = properties.getProperty("org.siframework.abbi.api");
 		if (searchAPIClass == null)
 		{
 			throw new ServletException("No API class specified in /WEB-INF/search.api.mapping.properties");
@@ -87,48 +114,61 @@ public class Search extends HttpServlet implements Logger {
 		}
 	}
 	
-	public API.Mode getSearchMode(HttpServletRequest request)
+	/**
+	 * Examine the request URL and from it, determine which protocol is being used.
+	 * @param requestURL The URL which was used to perform the query	
+	 * @return A value indicating which protocol is being used.
+	 */
+	public SearchMode getSearchMode(String requestURL)
 	{
-		String url = request.getRequestURL().toString();
-		if (url.contains("/net.ihe/"))
-			return API.Mode.MHD;
-		if (url.contains("/xdsentry"))
-			return API.Mode.FHIR;
-		return API.Mode.ABBI;
+		// If the request contains /net.ihe/ then use the Mobile Access to Health Documents protocol 
+		if (requestURL.contains("/net.ihe/"))
+			return SearchMode.MHD;
+		// If the request containts /xdsentry then use the HL7 FHIR protocol
+		if (requestURL.contains("/xdsentry"))
+			return SearchMode.FHIR;
+		// Otherwise, use the ABBI protocol
+		return SearchMode.ABBI;
 	}
 
 	/**
-	 * Compute the output format based on the URL, or the Accept Header
+	 * Compute the output format based on the URL, or the Accept Header.  Query parameters
+	 * can override this selection, but this establishes the default format.
 	 * @return "application/atom+xml" or "application/json"
 	 */
 	public String getOutputFormat(HttpServletRequest request, HttpServletResponse response)
 	{	String theURL = request.getRequestURL().toString();
-		String outputFormat = Search.ATOM;	// Our default format is atom+xml
+		String outputFormat = Search.ATOM_MIMETYPE;	// Our default format is atom+xml
 		// Deal with output format.
-		if (theURL.endsWith(".json"))
-			outputFormat = Search.JSON;
+		// TODO: Need to refactor this, because it is in two places right now
+		String fmt = request.getParameter(SearchProcessor.OUTPUTFORMAT);
+		if (fmt != null && fmt.contains("json"))
+			outputFormat = JSON_MIMETYPE;
+		else if (fmt != null && fmt.contains("atom"))
+			outputFormat = ATOM_MIMETYPE;
+		else if (theURL.endsWith(".json"))
+			outputFormat = Search.JSON_MIMETYPE;
 		else if (theURL.endsWith(".atom"))
-			outputFormat = Search.ATOM;
+			outputFormat = Search.ATOM_MIMETYPE;
 		else if (theURL.endsWith(".xml"))
-			outputFormat = Search.ATOM;
+			outputFormat = Search.ATOM_MIMETYPE;
 		else
 		{	// Validate contents of the Accept header.
 			String accept = request.getHeader("Accept");
 			if (accept != null)
-			{	if (accept.contains(Search.JSON) && accept.contains(Search.ATOM))
+			{	if (accept.contains(Search.JSON_MIMETYPE) && accept.contains(Search.ATOM_MIMETYPE))
 				{	// If it accepts both JSON and ATOM, we need to detect which is preferable.
 					// TODO: For now, we cheat by using order, but we should actually deal with the q parameter.
-					if (accept.indexOf(Search.JSON) < accept.indexOf(Search.ATOM))
-						outputFormat = Search.JSON;
+					if (accept.indexOf(Search.JSON_MIMETYPE) < accept.indexOf(Search.ATOM_MIMETYPE))
+						outputFormat = Search.JSON_MIMETYPE;
 				}
-				else if (accept.contains(Search.JSON))
-					outputFormat = Search.JSON;
+				else if (accept.contains(Search.JSON_MIMETYPE))
+					outputFormat = Search.JSON_MIMETYPE;
 				else if (!accept.contains("application/*") && !accept.contains("*/*"))
 				{
 					// Generates an error if we don't recognized an 
 					// acceptable format in STRICT mode.  In normal
 					// mode, we just return application/atom+xml
-					
 					return null;
 				}
 			}
@@ -136,55 +176,82 @@ public class Search extends HttpServlet implements Logger {
 		return outputFormat;
 	}
 	
-	public void copy(InputStream is, OutputStream os) throws IOException
+	/**
+	 * Write content in MHD Format
+	 * @param results The Atom Feed containing the MHD Results
+	 * @param w The Output Stream to which is being written to.
+	 * @throws Exception If an error occurs during output
+	 */
+	public void writeMHD(Feed results, OutputStream w) throws Exception
 	{
-		byte[] buffer = new byte[4096];
-		int length = 0;
-		
-		while ((length = is.read(buffer)) > 0)
-			os.write(buffer, 0, length);
-	}
-	
-	public void writeMHD(Feed results, HttpServletResponse response) throws Exception
-	{
-		OutputStream out = response.getOutputStream();
-		out.write("documentEntry:[\n".getBytes());
+		w.write("documentEntry:[\n".getBytes());
 		boolean first = true;
 		for (Entry e : results.getEntries())
 		{	if (!first)
-				out.write(',');
-			copy(e.getContent(), out);
+				w.write(',');
+			IO.copy(e.getContent(), w);
 			first = false;
 		}
-		out.write("]\n".getBytes());
+		w.write("]\n".getBytes());
 	}
 	
-	public void writeABBI(Feed results, String outputFormat, HttpServletResponse response) throws Exception
+	/**
+	 * Write content in Atom Format
+	 * @param results The Atom Feed containing the Results
+	 * @param w The Servlet Response which is being written to.
+	 * @throws Exception If an error occurs during output
+	 */
+	public void writeAtom(Feed results, String outputFormat, OutputStream w) throws Exception
 	{
-		Document x = XML.toXML(results);
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer t = null;
-		if (outputFormat.equals(Search.JSON))
-		{	InputStream is = getServletContext().getResourceAsStream("/xsl/ABBItoJSON.xsl");
-			StreamSource s = new StreamSource(is);
-				t = tf.newTransformer(s);
+		if (outputFormat.equals(Search.JSON_MIMETYPE))
+		{	String json = JSONMarshaller.toJson(results);
+			w.write(IO.toUTF8(json));
 		}
 		else
-		{	t = tf.newTransformer();
+		{	
+			Document x = XMLMarshaller.toXML(results);
+			Transformer t = XML.getTransformer();
 			t.setOutputProperty("indent", "yes");
+			StreamResult r = new StreamResult(w);
+			t.transform(new DOMSource(x), r);
+			w.flush();
 		}
-		OutputStream o = response.getOutputStream();
-		StreamResult r = new StreamResult(o);
-		t.transform(new DOMSource(x), r);
-		o.flush();
 	}
 	
+	/**
+	 * Handle post as if they were a Get to support applications that use forms and the
+	 * POST method to perform queries.  In the future, this may also handle updates for
+	 * document resources.
+	 * @param request	The request to process
+	 * @param response	Where to put the response.
+	 */
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+	{
+		doGet(request, response);
+	}
+	
+	/**
+	 * Process GET requests to search for lists of or access individual documents.
+	 * @param request	The request to process
+	 * @param response	Where to put the response.
+	 */
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	{
 
-		SearchProcessor search = new SearchProcessor(request, response, getServletContext(), properties, searchAPI, this);
-		API.Mode searchMode = getSearchMode(request);
-		String outputFormat = searchMode == Mode.MHD ? JSON : getOutputFormat(request, response);
+		// Create a search processor to handle this transaction
+		SearchProcessor search = new SearchProcessor(request, response, getServletContext(), 
+				properties, searchAPI, this);
+		
+		// Determine the search mode
+		SearchMode searchMode = getSearchMode(request.getRequestURL().toString());
+		
+		// And default output format
+		String outputFormat = searchMode == SearchMode.MHD ? JSON_MIMETYPE : getOutputFormat(request, response);
+		
+		// If we have API checking turned on (isString), and searchMode wasn't determined, then
+		// we barf.
 		if (search.isStrict() && searchMode == null)
 		{	try
 			{
@@ -197,47 +264,57 @@ public class Search extends HttpServlet implements Logger {
 			}
 			return;
 		}
+		SearchParameters p = new SearchParameters();
+		p.setOutputFormat(outputFormat);
+		p.setSearchMode(searchMode);
+		// 
+		Feed results = search.processQuery(p);
 		
-		
-		Feed results = search.processQuery(searchMode, outputFormat);
-		
-		results.setUpdated(new Date());
-		results.setGenerator(properties.getProperty("feed.generator"));
-		results.setTitle(properties.getProperty("feed.title"));
-		results.setSubtitle(properties.getProperty("feed.subtitle"));
-		
-		try { 
-			String requestUri = request.getRequestURL().toString();
-			requestUri = requestUri.substring(0, requestUri.lastIndexOf('/'));
-			results.setId(new URI(requestUri)); 
-		} 
-		catch (URISyntaxException e1) { log("setId", e1); } 
-		
-		String uri = properties.getProperty("feed.icon");
-		try { if (uri != null) results.setIcon(new URI(uri)); } catch (URISyntaxException e1) {
-			log("setIcon", e1);
-		} 
-		
-		uri = properties.getProperty("feed.logo");
-		try { if (uri != null) results.setLogo(new URI(uri)); } catch (URISyntaxException e1) {
-			log("setLogo", e1);
-		} 
-		
-		response.setHeader("Content-Type", outputFormat);
+		response.setHeader("Content-Type", p.getOutputFormat());
 		try {
+			OutputStream w = response.getOutputStream();
 			switch (searchMode) {
 			case FHIR:
 			case ABBI:
-				writeABBI(results, outputFormat, response);
+				writeAtom(results, outputFormat, w);
 				break;
 			case MHD:
-				writeMHD(results, response);
+				writeMHD(results, w);
 				break;
 			}
 		} catch (Exception e) {
 			log("Exception", e);
 		}
 
+	}
+
+	public Properties getProperties()
+	{
+		return properties;
+	}
+	
+	public API getAPI()
+	{
+		return searchAPI;
+	}
+	
+	// Context Implementation
+	@Override
+	public void log(String message)
+	{
+		System.err.println(message);
+	}
+	
+	@Override
+	public void log(String message, Throwable t)
+	{
+		System.err.println(message);
+		t.printStackTrace(System.err);
+	}
+
+	@Override
+	public InputStream getResource(String name) {
+		return this.getServletContext().getResourceAsStream(name);
 	}
 }
 

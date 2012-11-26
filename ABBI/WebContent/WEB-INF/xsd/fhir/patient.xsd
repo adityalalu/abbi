@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  © HL7 (http://hl7.org)
+  Generated on Wed, Nov 14, 2012 09:38+1100 for FHIR v0.06 
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hl7.org/fhir" xmlns:xhtml="http://www.w3.org/1999/xhtml" targetNamespace="http://hl7.org/fhir" elementFormDefault="qualified" version="0.06">
+  <xs:include schemaLocation="fhir-base.xsd"/>
+  <xs:element name="Patient" type="Patient">
+    <xs:annotation>
+      <xs:documentation>todo</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="Patient">
+    <xs:sequence>
+      <xs:element name="link" minOccurs="0" maxOccurs="unbounded" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>A linked patient record is a record that concerns the same patient. Records are linked after it is realised that at least one was created in error.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="active" minOccurs="1" maxOccurs="1" type="boolean">
+        <xs:annotation>
+          <xs:documentation>Whether the patient record is in use, or has been removed from active use</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="subject" minOccurs="1" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The person or animal that this patient record is about</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="provider" minOccurs="1" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The provider for whom this is a patient record</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="identifier" minOccurs="0" maxOccurs="unbounded" type="HumanId">
+        <xs:annotation>
+          <xs:documentation>An identifier that applies to this person as a patient</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="diet" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>Dietary restrictions for the patient</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="confidentiality" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>Confidentiality of the patient records</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="recordLocation" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>The location of the paper record for the patient, if there is one</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="extension" type="Extension" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>See Extensions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="text" type="Narrative" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Text summary of resource (for human interpretation)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

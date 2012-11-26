@@ -58,7 +58,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
     	<servlet-name>SearchServlet</servlet-name>
-    	<url-pattern>/search.atom</url-pattern>
+    	<url-pattern>/search.xml</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
     	<servlet-name>SearchServlet</servlet-name>
@@ -73,6 +73,15 @@
     	<url-pattern>/xdsentry/search</url-pattern>
 	</servlet-mapping>
 	
+	<servlet-mapping>
+    	<servlet-name>SearchServlet</servlet-name>
+    	<url-pattern>/xdsentry/search.xml</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+    	<servlet-name>SearchServlet</servlet-name>
+    	<url-pattern>/xdsentry/search.json</url-pattern>
+	</servlet-mapping>
+		
 	<servlet>
     	<servlet-name>DocumentServlet</servlet-name>
     	<jsp-file>/document.jsp</jsp-file>

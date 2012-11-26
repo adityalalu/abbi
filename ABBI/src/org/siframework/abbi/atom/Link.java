@@ -3,8 +3,8 @@ package org.siframework.abbi.atom;
 import java.net.URI;
 
 public interface Link {
-    public URI getHref();
-	public void setHref(URI href);
+    public String getHref();
+	public void setHref(String href);
 	
 	public String getRel();
 	public void setRel(String rel);

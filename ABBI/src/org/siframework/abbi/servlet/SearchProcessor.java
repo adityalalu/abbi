@@ -1,11 +1,7 @@
 package org.siframework.abbi.servlet;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,27 +17,18 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.siframework.abbi.api.API;
-import org.siframework.abbi.api.Logger;
+import org.siframework.abbi.api.Context;
 import org.siframework.abbi.api.SearchParameters;
-import org.siframework.abbi.api.Util;
 import org.siframework.abbi.atom.Entry;
 import org.siframework.abbi.atom.Feed;
 import org.siframework.abbi.atom.Link;
-import org.siframework.abbi.atom.XML;
 import org.siframework.abbi.atom.impl.CategoryImpl;
+import org.siframework.abbi.atom.impl.EntryImpl;
 import org.siframework.abbi.atom.impl.FeedImpl;
 import org.siframework.abbi.atom.impl.LinkImpl;
-import org.w3c.dom.Document;
+import org.siframework.abbi.utility.DT;
 
 /**
  * This class implements the basic framework of a search processor.  It contains a number
@@ -52,23 +39,18 @@ import org.w3c.dom.Document;
 public class SearchProcessor {
 	
 	// Parameter Names to use.
-	private final static String
+	protected final static String
 		PATIENTID = "patientid",
 		MIMETYPE = "mimetype",
 		FORMAT = "format",
 		CLASS = "class",
 		CONTENT = "content",
-		SERVICESTARTTIMEFROM = "service.start-after",
-		SERVICESTARTTIMETO = "service.start-before",
 		SERVICESTARTTIME = "service.start",
-		SERVICESTOPTIMEFROM = "service.stop-after",
-		SERVICESTOPTIMETO = "service.stop-before",
 		SERVICESTOPTIME = "service.stop",
-		CREATIONTIMEFROM = "created-before",
-		CREATIONTIMETO = "created-after",
 		CREATIONTIME = "created",
 		COUNT = "count",
-		N = "n";
+		N = "n",
+		OUTPUTFORMAT = "$format";
 	
 	public final static String _XML_CONVERTS_2[] = { "text/html", "text/plain" };
 	public final static HashSet<String> 
@@ -85,7 +67,7 @@ public class SearchProcessor {
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
 	private final ServletContext context;
-	private final Logger log;
+	private final Context log;
 	private final API searchAPI;
 	private final Properties properties;
 
@@ -98,7 +80,7 @@ public class SearchProcessor {
 		ServletContext context,
 		Properties properties,
 		API searchAPI, 
-		Logger log)
+		Context log)
 	{
 		this.request = request;
 		this.response = response;
@@ -119,16 +101,29 @@ public class SearchProcessor {
 		}
 	}
 
+	/**
+	 * Returns true if strict API checking should be performed, false otherwise
+	 * @return True if strict API checking should be performed, false otherwise
+	 */
 	public boolean isStrict()
 	{
 		return strict;
 	}
 	
+	/**
+	 * Set whether Strict API checking should be used or not.
+	 * @param strict A boolean value indicating whether strict API checking should be used (true) or not (false).
+	 */
 	public void setStrict(boolean strict)
 	{
 		this.strict = strict;
 	}
-	
+
+	/**
+	 * Get a list of parameter values used for the given request parameter name.
+	 * @param name	The name of the parameter to check.
+	 * @return	A list of values set for that parameter name.
+	 */
 	public List<String> getRequestParameters(String name)
 	{
 		List<String> values = new ArrayList<String>();
@@ -177,7 +172,7 @@ public class SearchProcessor {
 		if (value == null)
 			return null;
 		
-		Date date = Util.parseISODate(value);
+		Date date = DT.parseISODate(value);
 		// In strict mode we check the date format.
 		// Otherwise, we just pass it on to the back end
 		// and let it deal with it.
@@ -190,13 +185,23 @@ public class SearchProcessor {
 		return date;
 	}
 	
+	/**
+	 * Gets the date range associated with a request parameter.  
+	 * @param name The name of the request parameter to check.
+	 * @param isISO	A boolean value to indicate how dates are represented.  If true, dates are represented
+	 * in ISO format (YYYYMMDDhhmmss.SSSZ or YYYY-MM-DDThh:mm:ss.SSSZ).  If false, they are represented
+	 * as an integer offset in seconds from the Epoch (Midnight, January 1, 1970).
+	 * @return A pair of Date objects representing the lower and upper bounds of the range.
+	 */
 	public Date[] getDateRangeParameter(String name, boolean isISO)
 	{
 		Date d[] = new Date[2];
 		
 		Date both = isISO ? getISODateParameter(name) : getDateParameter(name);
+
 		String fromName = name + "-after";
 		Date from = isISO ? getISODateParameter(fromName) : getDateParameter(fromName);
+		
 		String toName = name + "-before";
 		Date to = isISO ? getISODateParameter(toName) : getDateParameter(toName);
 		
@@ -227,7 +232,10 @@ public class SearchProcessor {
 	public Date getDateParameter(String name)
 	{
 		String value = getParameter(name);
-		Date date = Util.parseDate(value);
+		if (value == null)
+			return null;
+		
+		Date date = DT.parseDate(value);
 		if (isStrict() && date == null)
 			sendError(
 				HttpServletResponse.SC_BAD_REQUEST,
@@ -311,9 +319,13 @@ public class SearchProcessor {
 		}
 	}
 	
-	public SearchParameters getCommonAPIParameters(boolean isISO)
+	/**
+	 * Set the API Parameters common to ABBI and FHIR.
+	 * @param isISO	true if using ISO Date Format (ABBI) or false otherwise (FHIR)
+	 * @return	The parsed search parameters given in the request.
+	 */
+	public void setCommonAPIParameters(boolean isISO, SearchParameters p)
 	{
-		SearchParameters p = new SearchParameters();
 		// Now we get the various parameters
 		p.setPatientID(getParameter(PATIENTID));
 
@@ -351,73 +363,81 @@ public class SearchProcessor {
 		d  = getDateRangeParameter(CREATIONTIME, isISO);
 		p.setCreationTimeFrom(d[0]);
 		p.setCreationTimeTo(d[1]);
-		return p;
-		
 	}
 	
-	
-	public SearchParameters getABBIAPIParameters()
-	{
-		return getCommonAPIParameters(true);
-	}
-	
-	/** Get the search parameters, per the FHIR xdsentry specification.
-	 * Extracts the search parameters from the query string.
-	 * n : integer	Starting offset of the first record to return in the search set
-	 * count : integer	Number of return records requested. The server is not bound to conform
-	 * id : token	The id of the resource [NOT SUPPORTED]
-	 * repositoryId : string	repository - logical or literal url  [NOT SUPPORTED]
-	 * mimeType : string	mime type of document
-	 * format : qtoken	format (urn:.. Following rules)
-	 * class : qtoken	particular kind of document
-	 * type : qtoken	precise kind of document
-	 * documentId : string	document id - logical or literal url [NOT SUPPORTED]
-	 * availability : string	Approved | Deprecated [NOT SUPPORTED]
-	 * confidentiality : qtoken	as defined by Affinty Domain
-	 * created : date	date equal to time author created document
-	 * created-before : date	date before or equal to time author created document
-	 * created-after : date	date after or equal to time author created document
-	 * event : qtoken	main clinical act(s)
-	 * language : string	human language (RFC 3066)
-	 * folderId : qtoken	folders this document is in
-	 * patientId : qtoken	subject of care of the document
-	 * patientInfo : qtoken	demographic details
-	 * author.name : string	name of human/machine
-	 * author.id : qtoken	id of human/machine
-	 * facilityType : qtoken	type of organizational setting
-	 * practiceSetting : qtoken	clinical speciality of the act
-	 * homeCommunity : string	globally unique community id
-	 * service.start : date	date equal to Start time
-	 * service.start-before : date	date before or equal to Start time
-	 * service.start-after : date	date after or equal to Start time
-	 * service.stop : date	date equal to Stop time
-	 * service.stop-before : date	date before or equal to Stop time
-	 * service.stop-after : date	date after or equal to Stop time
-	 * comments : string	comments as specified by affinity domain
-	 * @return
+	/**
+	 * Sets the search parameters when using the ABBI protocol
+	 * @return 
+	 * @return The parsed search parameters
 	 */
-	public SearchParameters getFHIRAPIParameters()
+	public void setABBIAPIParameters(SearchParameters p)
 	{
-		return getCommonAPIParameters(false);
+		setCommonAPIParameters(true, p);
+	}
+	
+	/** Set the search parameters, per the FHIR xdsentry specification.
+	 * Extracts the search parameters from the query string.<br/>
+	 * n : integer	Starting offset of the first record to return in the search set<br/>
+	 * count : integer	Number of return records requested. The server is not bound to conform<br/>
+	 * id : token	The id of the resource [NOT SUPPORTED]<br/>
+	 * repositoryId : string	repository - logical or literal url  [NOT SUPPORTED]<br/>
+	 * mimeType : string	mime type of document<br/>
+	 * format : qtoken	format (urn:.. Following rules)<br/>
+	 * class : qtoken	particular kind of document<br/>
+	 * type : qtoken	precise kind of document [NOT SUPPORTED]<br/>
+	 * documentId : string	document id - logical or literal url [NOT SUPPORTED]<br/>
+	 * availability : string	Approved | Deprecated [NOT SUPPORTED]<br/>
+	 * confidentiality : qtoken	as defined by Affinty Domain<br/>
+	 * created : date	date equal to time author created document<br/>
+	 * created-before : date	date before or equal to time author created document<br/>
+	 * created-after : date	date after or equal to time author created document<br/>
+	 * event : qtoken	main clinical act(s)[NOT SUPPORTED]<br/>
+	 * language : string	human language (RFC 3066) [NOT SUPPORTED]<br/>
+	 * folderId : qtoken	folders this document is in [NOT SUPPORTED]<br/>
+	 * patientId : qtoken	subject of care of the document<br/>
+	 * patientInfo : qtoken	demographic details [NOT SUPPORTED]<br/>
+	 * author.name : string	name of human/machine [NOT SUPPORTED]<br/>
+	 * author.id : qtoken	id of human/machine [NOT SUPPORTED]<br/>
+	 * facilityType : qtoken	type of organizational setting [NOT SUPPORTED]<br/>
+	 * practiceSetting : qtoken	clinical speciality of the act [NOT SUPPORTED]<br/>
+	 * homeCommunity : string	globally unique community id [NOT SUPPORTED]<br/>
+	 * service.start : date	date equal to Start time<br/>
+	 * service.start-before : date	date before or equal to Start time<br/>
+	 * service.start-after : date	date after or equal to Start time<br/>
+	 * service.stop : date	date equal to Stop time<br/>
+	 * service.stop-before : date	date before or equal to Stop time<br/>
+	 * service.stop-after : date	date after or equal to Stop time<br/>
+	 * comments : string	comments as specified by affinity domain [NOT SUPPORTED]<br/>
+	 * @return 
+	 * @return The API Parameters filled in from the Query String
+	 */
+	public void setFHIRAPIParameters(SearchParameters p)
+	{
+		setCommonAPIParameters(false, p);
+		String fmt = getParameter(OUTPUTFORMAT);
+		if (fmt != null)
+		{	if (fmt.contains("json"))
+				p.setOutputFormat(Search.JSON_MIMETYPE);
+			else if (fmt.contains("atom"))
+				p.setOutputFormat(Search.ATOM_MIMETYPE);
+		}
 	}
 	
 	/** Get search parameters for MHD from the query and return them
-	 * typeCode
-	 * practiceSettingCode
-	 * creationTimeFrom
-	 * creationTimeTo
-	 * serviceStartTimeFrom
-	 * serviceStartTimeTo
-	 * serviceStopTimeFrom
-	 * serviceStopTimeTo
-	 * formatCode
+	 * typeCode<br/>
+	 * practiceSettingCode<br/>
+	 * creationTimeFrom<br/>
+	 * creationTimeTo<br/>
+	 * serviceStartTimeFrom<br/>
+	 * serviceStartTimeTo<br/>
+	 * serviceStopTimeFrom<br/>
+	 * serviceStopTimeTo<br/>
+	 * formatCode<br/>
 	 * mimeType (not an MHD parameter)
 	 * @return the Search parameters found.
 	 */
-	public SearchParameters getMHDAPIParameters()
+	public void setMHDAPIParameters(SearchParameters p)
 	{
-		SearchParameters p = new SearchParameters();
-		
 		// Now we get the various parameters
 		p.setPatientID(getParameter(PATIENTID));
 
@@ -454,26 +474,78 @@ public class SearchProcessor {
 		p.setCreationTimeFrom(getISODateParameter("creationTimeFrom")); 
 		p.setCreationTimeTo(getISODateParameter("creationTimeTo"));
 		
-		return p;
+	}
+	
+	/**
+	 * Initialize a new Feed for return by a search request
+	 * @param outputFormat 
+	 * @return A new feed, initialized from properties and business rules
+	 */
+	public Feed initializeFeed(String outputFormat)
+	{
+		Feed results = new FeedImpl();
+		
+		// Property (Configuration) based initializations
+		results.setGenerator(properties.getProperty("feed.generator"));
+		results.setTitle(properties.getProperty("feed.title"));
+		results.setSubtitle(properties.getProperty("feed.subtitle"));
+		String uri = properties.getProperty("feed.icon");
+		if (uri != null) results.setIcon(uri);
+		uri = properties.getProperty("feed.logo");
+		if (uri != null) results.setLogo(uri);
+		
+		// Business rule initializations
+		String requestUri = request.getRequestURL().toString();
+		requestUri = requestUri.substring(0, requestUri.lastIndexOf('/'));
+		
+		results.setId(requestUri); 
+		String self = request.getRequestURL().toString();
+		if (request.getQueryString() != null)
+			self = self + "?" + request.getQueryString();
+		
+		// Self link should represent appropriate output format
+		Link lSelf = new LinkImpl(self, "self", outputFormat);
+		lSelf.setTitle(results.getTitle());
+		results.setSelf(lSelf);
+		results.setUpdated(new Date());
+
+		return results;
 	}
 
-	public Feed processQuery(API.Mode searchMode, String outputFormat)
+	/**
+	 * Process a query<br/>
+	 * 1.  Get the Query Parameters<br/>
+	 * 2.  Send them to the back end to get results as Atom Entries<br/>
+	 * 3.  Filter the pertinent results<br/>
+	 * 4.  Attach the entries to an Atom Feed and return it to the caller<br/>
+	 * @param searchMode The API mode to use when parsing query parameters
+	 * @param outputFormat How the output will be generated
+	 * @return An Atom Feed containing the search results.
+	 */
+	public Feed processQuery(SearchParameters p)
 	{
-		SearchParameters p = null;
-		
-		switch (searchMode) {
+		// Get the query parameters
+		switch (p.getSearchMode()) {
 		case ABBI:
-			p = getABBIAPIParameters();
+			setABBIAPIParameters(p);
 			break;
 		case MHD:
-			p = getMHDAPIParameters();
+			setMHDAPIParameters(p);
 			break;
 		case FHIR:
-			p = getFHIRAPIParameters();
+			setFHIRAPIParameters(p);
 			break;
 		}
-		if (p.getOutputFormat() == null)
-			p.setOutputFormat(outputFormat);
+		
+		// Set the base URL for the service as a parameter
+		String requestURI = request.getRequestURL().toString();
+		if (requestURI.contains("/net.ihe/"))
+			requestURI = requestURI.substring(0, requestURI.lastIndexOf("/net.ihe/")+9);
+		else if (requestURI.contains("/xdsentry/"))
+			requestURI = requestURI.substring(0, requestURI.lastIndexOf("/xdsentry"));
+		else
+			requestURI = requestURI.substring(0, requestURI.lastIndexOf('/'));
+		p.setBaseURL(requestURI);
 		
 		// Haven't implemented pagination yet
 		if (isStrict() && (p.getIndex() > 0 || p.getCount() > 0))
@@ -481,6 +553,7 @@ public class SearchProcessor {
 			return null;
 		}
 		
+		// If API checking is enabled, and there are errors, return null
 		if (isStrict() && hasErrors)
 			return null;
 		
@@ -491,62 +564,26 @@ public class SearchProcessor {
 		// a fixed patient ID.
 		p.setPatientID("00ae33bb8f2b437");
 		
-		List<Entry> entries = searchAPI.search(p, searchMode, log);
-		Feed results = new FeedImpl();
+		// Perform the query
+		List<Entry> entries = searchAPI.search(p, log);
 		
 		// If there were no entries, generate an error and return
 		if (entries == null)
 		{	sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error during query");
 			return null;
 		}
+		// Initialize the feed
+		Feed results = initializeFeed(p.getOutputFormat());
+
+		// Set the entries
+		results.setEntries(filterResults(entries, p.getMimeType()));
 		
-		results.setEntries(entries);
-		String self = request.getRequestURL().toString();
-		if (request.getQueryString() != null)
-			self = self + "?" + request.getQueryString();
-		
-		try {
-			Link lSelf = new LinkImpl(new URI(self), "self", Search.ATOM);
-			lSelf.setTitle(results.getTitle());
-			results.setSelf(lSelf);
-		} catch (URISyntaxException e2) {
-			log.log("Bad URI: " + self, e2);
-		}
-		results.setEntries(filterResults(results.getEntries(), p.getMimeType()));
-		URI classesURI = null, mimeTypesURI = null, formatsURI = null;
-		try
-		{	classesURI = new URI(ABBI + "/class");
-			formatsURI = new URI(ABBI + "/format");
-		}
-		catch (URISyntaxException e1)
-		{ 
-			log.log("URI", e1);
-		}
-		
+		// Add a few categories to the feed based on query parameters used.
 		for (String category : p.getClasses())
-			results.getCategories().add(new CategoryImpl(category, classesURI));
+			results.getCategories().add(new CategoryImpl(category, ABBI + "/class"));
 		for (String category : p.getFormat())
-			results.getCategories().add(new CategoryImpl(category, formatsURI));
-
-		List<String> targetMimeTypes = p.getMimeType() != null ?
-				Arrays.asList(p.getMimeType()) : 
-				(List<String>)Collections.EMPTY_LIST; 
-				
-		String requestURI = request.getRequestURI().toString();
-		requestURI = requestURI.substring(0, requestURI.lastIndexOf('/'));
-
-		for (Entry entry: results.getEntries())
-		{	
-			String path = null;
-			try {
-				// TODO: Ensure format() call generates entry in appropriate format!
-				path = requestURI + entry.getContentSrc().toString();
-				entry.setContentSrc(new URI(path));
-			} catch (URISyntaxException e) {
-				log.log("Set Content Path Error", e);
-			}
-		}
-
+			results.getCategories().add(new CategoryImpl(category, ABBI + "/format"));
+		
 		return results;
 	}
 
@@ -569,6 +606,12 @@ public class SearchProcessor {
 		return null;
 	}
 	
+	/**
+	 * Return a set of strings indicating what outputs can be generated from content in the 
+	 * passed in mimeType
+	 * @param mimeType The mimeType of the source document
+	 * @return A set of mimeTypes that the source document can be transformed to.
+	 */
 	public static Set<String> transformableTo(String mimeType)
 	{
 		if (mimeType.equals("text/xml"))
@@ -605,9 +648,8 @@ public class SearchProcessor {
 		}
 		
 		// Sort the list in order
-		Collections.sort(results, Util.ENTRYCOMPARATOR);
-		
-		// TODO: Handle the mime Type filtering
+		Collections.sort(results, EntryImpl.ENTRYCOMPARATOR);
+
 		return results;
 	}
 }

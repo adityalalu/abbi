@@ -13,7 +13,7 @@
 	// where the token is gc'd before the request gets back to the application.
 	// In those cases, the user can just log in again.
 	
-	WeakHashMap<String, Token> m = (WeakHashMap<String, Token>)application.getAttribute("OAuthTokenMap");
+	HashMap<String, Token> m = (HashMap<String, Token>)application.getAttribute("OAuthTokenMap");
 	OAuthService service = (OAuthService)application.getAttribute("OAuthService.Twitter");
 	if (m == null || service == null)
 		response.sendRedirect("init.jsp?redirect=login.jsp");

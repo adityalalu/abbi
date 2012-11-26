@@ -1,9 +1,11 @@
 package org.siframework.abbi.atom.impl;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,9 +17,14 @@ import org.siframework.abbi.atom.Entry;
 import org.siframework.abbi.atom.Link;
 import org.siframework.abbi.atom.Person;
 
+/**
+ * A Simple Java Bean implementing an Atom Entry
+ * @author Keith W. Boone
+ *
+ */
 public class EntryImpl implements Entry  {
 
-	private URI id = null, contentSrc = null;
+	private String id = null, contentSrc = null;
 	private String generator = null, title = null, rights = null, summary = null;
 	private List<Link> links = new LinkedList<Link>();
 	private HashSet<Person> authors = new HashSet<Person>(), contributors = new HashSet<Person>();
@@ -25,14 +32,27 @@ public class EntryImpl implements Entry  {
 	private Date updated = null, published = null;
 	private String contentType = null;
 	private InputStream content = null;
+
+	/**
+	 * A comparator to sort Entries by publication date.
+	 */
+	public static final Comparator<Entry> ENTRYCOMPARATOR =
+		new Comparator<Entry>() {
+		public int compare(Entry o1, Entry o2) {
+			int result = o1.getPublished().compareTo(o2.getPublished());
+			if (result == 0)
+				result = o1.getId().compareTo(o2.getId());
+			return result;
+		}
+	};
 	
 	@Override
-	public URI getId() {
+	public String getId() {
 		return id;
 	}
 
 	@Override
-	public void setId(URI id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -140,7 +160,6 @@ public class EntryImpl implements Entry  {
 
 	@Override
 	public String getSummary() {
-		// TODO Auto-generated method stub
 		return summary;
 	}
 
@@ -151,7 +170,6 @@ public class EntryImpl implements Entry  {
 
 	@Override
 	public Date getPublished() {
-		// TODO Auto-generated method stub
 		return published;
 	}
 
@@ -171,12 +189,12 @@ public class EntryImpl implements Entry  {
 	}
 
 	@Override
-	public URI getContentSrc() {
+	public String getContentSrc() {
 		return contentSrc;
 	}
 
 	@Override
-	public void setContentSrc(URI contentSrc) {
+	public void setContentSrc(String contentSrc) {
 		this.contentSrc = contentSrc;
 	}
 	

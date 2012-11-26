@@ -48,7 +48,7 @@
 	<ul>
 	<li>Access Document Content through different protocols</li>
 	<li><strike>Add Search Parameters to MHD and FHIR Protocols</strike></li>
-	<li>Support the JSON Output format for the FHIR Protocol</li>
+	<li><strike>Support the JSON Output format for the FHIR Protocol</strike></li>
 	<li>Support for pagination (and result caching) in the API</li>
 	<li>Updated Documentation</li>
 	<li>Document Architecture or lack thereof ;-)</li>

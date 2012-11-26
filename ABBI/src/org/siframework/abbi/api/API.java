@@ -19,10 +19,6 @@ import java.util.Set;
  *
  */
 public interface API {
-	public enum Mode {
-		ABBI, FHIR, MHD
-	};
-	
 	public interface Content {
 		public InputStream getContent();
 		public String getDocumentIdentifier();
@@ -33,7 +29,7 @@ public interface API {
 	 * @param log	A logger to report errors during initialization
 	 * @throws Exception An exception describing any errors found during initilization
 	 */
-	public void init(Properties p, Logger log) throws Exception;
+	public void init(Properties p, Context log) throws Exception;
 	
 	/**
 	 * Search for the requested content and return an Atom feed containing
@@ -41,7 +37,7 @@ public interface API {
 	 * @param search	The parameters to use when searching
 	 * @return The atom feed to return to the caller
 	 */
-	public List<Entry> search(SearchParameters search, Mode searchMode, Logger log);
+	public List<Entry> search(SearchParameters search, Context log);
 	
 	/**
 	 * Returns the list of formats supported by the implementation
@@ -71,5 +67,5 @@ public interface API {
 	 * @param documentIdentifier	The document identifiers to retrieve	
 	 * @return	An array of objects implementing the Content interface
 	 */
-	public Content[] getDocumentContent(String documentIdentifier[], String patientId, Logger log);
+	public Content[] getDocumentContent(String documentIdentifier[], String patientId, Context log);
 }

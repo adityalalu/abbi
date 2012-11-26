@@ -4,3 +4,4 @@ org.siframework.abbi.api.xds
 org.siframework.abbi.atom
 org.siframework.abbi.atom.impl
 org.siframework.abbi.servlet
+org.siframework.abbi.utility

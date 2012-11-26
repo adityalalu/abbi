@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  © HL7 (http://hl7.org)
+  Generated on Wed, Nov 14, 2012 09:38+1100 for FHIR v0.06 
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hl7.org/fhir" xmlns:xhtml="http://www.w3.org/1999/xhtml" targetNamespace="http://hl7.org/fhir" elementFormDefault="qualified" version="0.06">
+  <xs:include schemaLocation="fhir-base.xsd"/>
+  <xs:element name="DocumentHeader" type="DocumentHeader">
+    <xs:annotation>
+      <xs:documentation>todo</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DocumentHeader">
+    <xs:sequence>
+      <xs:element name="instant" minOccurs="1" maxOccurs="1" type="instant">
+        <xs:annotation>
+          <xs:documentation>the document creation time, when the document first came into being. Where the CDA document is a transform from an original document in some other format, the ClinicalDocument.effectiveTime is the time the original document is created.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="type" minOccurs="1" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>Specifying the particular kind of document (e.g. History and Physical, Discharge Summary, Progress Note)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="title" minOccurs="0" maxOccurs="1" type="string">
+        <xs:annotation>
+          <xs:documentation>Official human-readable label for the document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="replaces" minOccurs="0" maxOccurs="1" type="id">
+        <xs:annotation>
+          <xs:documentation>Identifies the document this document supersedes, if any.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="enterer" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The person or device that performed the data entry leading to this document. Where there is more than one candidate, pick the most proximal to the document creation or capture on a per-section basis. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="subject" minOccurs="1" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies the primary subject of the document.  </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="informant" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies the source that recounted the information recorded</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="author" minOccurs="1" maxOccurs="unbounded" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies who is responsible for the information in the document.  (Not necessarily who typed it in.)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="attester" type="DocumentHeader.Attester" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>A participant who has attested to the accuracy of the document</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="recipient" minOccurs="0" maxOccurs="unbounded" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies the people and organisations for whom the document is intended</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="custodian" minOccurs="1" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies the organization or group who is responsible for ongoing maintenance of and access to the document.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="context" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The main Act, such as a colonoscopy or an appendectomy, being documented</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="encounter" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Describes the clinical encounter or type of care this document is associated with.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="stylesheet" minOccurs="0" maxOccurs="1" type="Attachment">
+        <xs:annotation>
+          <xs:documentation>A fixed stylesheet to use when rendering the documents</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="representation" minOccurs="0" maxOccurs="1" type="Attachment">
+        <xs:annotation>
+          <xs:documentation>An alternative representation of the document that can be used in place of the html based rendering</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="section" type="DocumentHeader.Section" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Identifies a main topic within the document's table of contents</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="extension" type="Extension" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>See Extensions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="text" type="Narrative" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation> </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentHeader.Attester">
+    <xs:sequence>
+      <xs:element name="mode" minOccurs="1" maxOccurs="1" type="DocumentAuthenticationMode">
+        <xs:annotation>
+          <xs:documentation>The type of attestation the authenticator offers</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="time" minOccurs="0" maxOccurs="1" type="dateTime">
+        <xs:annotation>
+          <xs:documentation>When document was attested by the party</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="party" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Who attested the document in the specified way</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentHeader.Section">
+    <xs:sequence>
+      <xs:element name="type" minOccurs="0" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>A code identifying the kind of content contained within the section</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="instant" minOccurs="0" maxOccurs="1" type="instant">
+        <xs:annotation>
+          <xs:documentation>Identifies when the content of the section was created</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="author" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies who is responsible for the information in the section.  (Not necessarily who typed it in.)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="enterer" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The person or device that performed the data entry leading to this section. Where there is more than one candidate, pick the most proximal to the document creation. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="subject" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies the primary subject of the section.  </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="informant" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies the source that recounted the information recorded</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="content" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>Identifies the discrete data that provides the content for the section.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="text" minOccurs="0" maxOccurs="1" type="Narrative">
+        <xs:annotation>
+          <xs:documentation>Provides the text view of the section.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="section" type="DocumentHeader.Section" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Identifies a subtopic within the section as part of the document's table of contents</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DocumentAuthenticationMode">
+    <xs:simpleContent>
+      <xs:restriction base="code">
+        <xs:enumeration value="personal">
+          <xs:annotation>
+            <xs:documentation>The person authenticated the document in their personal capacity</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="professional">
+          <xs:annotation>
+            <xs:documentation>The person authenticated the document in their professional capacity</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="legal">
+          <xs:annotation>
+            <xs:documentation>The person authenticated the document and accepted legal responsibility for its content</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="official">
+          <xs:annotation>
+            <xs:documentation>The organization authenticated the document as consistent with their policies and procedures</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

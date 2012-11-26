@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  © HL7 (http://hl7.org)
+  Generated on Wed, Nov 14, 2012 09:38+1100 for FHIR v0.06 
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hl7.org/fhir" xmlns:xhtml="http://www.w3.org/1999/xhtml" targetNamespace="http://hl7.org/fhir" elementFormDefault="qualified" version="0.06">
+  <xs:include schemaLocation="fhir-base.xsd"/>
+  <xs:element name="Device" type="Device">
+    <xs:annotation>
+      <xs:documentation>todo</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="Device">
+    <xs:sequence>
+      <xs:element name="type" minOccurs="1" maxOccurs="1" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>Describes what kind of device that this </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="manufacturer" minOccurs="0" maxOccurs="1" type="string">
+        <xs:annotation>
+          <xs:documentation>The name of the manufacturer</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="model" minOccurs="0" maxOccurs="1" type="string">
+        <xs:annotation>
+          <xs:documentation>The &quot;model&quot; - an identifier assigned by the manufacturer to identify the product by it's type. This number is shared by the all devices sold as the same type</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="version" minOccurs="0" maxOccurs="1" type="string">
+        <xs:annotation>
+          <xs:documentation>The version of the device, if the device has multiple releases under the same model, or if the device is software or carries firmware</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="serialNumber" minOccurs="0" maxOccurs="1" type="string">
+        <xs:annotation>
+          <xs:documentation>The serial number assigned by the organisation when the device was manufactured</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="owner" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The organization that is responsible for the provision and ongoing maintenance of the device</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="assignedId" minOccurs="0" maxOccurs="unbounded" type="Identifier">
+        <xs:annotation>
+          <xs:documentation>The identifier assigned to the device by the organisation that owns/manages the device</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="location" minOccurs="0" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The resource may be found in a literal location (i.e. GPS coordinates), a logical place (i.e. &quot;in/with the patient&quot;), or a coded location</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="contact" minOccurs="0" maxOccurs="unbounded" type="Contact">
+        <xs:annotation>
+          <xs:documentation>Contact details for an organization or a particular human that is responsible for the device</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address" minOccurs="0" maxOccurs="1" type="Contact">
+        <xs:annotation>
+          <xs:documentation>A network address on which the device may be contacted directly</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="extension" type="Extension" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>See Extensions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="text" type="Narrative" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Text summary of resource (for human interpretation)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

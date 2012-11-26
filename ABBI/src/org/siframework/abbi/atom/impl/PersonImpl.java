@@ -4,22 +4,41 @@ import java.net.URI;
 
 import org.siframework.abbi.atom.Person;
 
+/**
+ * A simple Java Bean implementing the Person interface
+ * @author Keith W. Boone
+ */
 public class PersonImpl implements Person {
 
 	private  String name = null, email = null;
-	private  URI webSite = null;
+	private  String webSite = null;
 	
+	/**
+	 * Construct a person with the specified name.
+	 * @param name	The name of the person
+	 */
 	public PersonImpl(String name)
 	{
 		this(name, null, null);
 	}
 	
+	/**
+	 * Construct a person with the specified name and email address.
+	 * @param name	The name of the person
+	 * @param email The email address for the person
+	 */
 	public PersonImpl(String name, String email)
 	{
 		this(name, email, null);
 	}
 	
-	public PersonImpl(String name, String email, URI webSite)
+	/**
+	 * Construct a person with the specified name, email address, and website.
+	 * @param name	The name of the person
+	 * @param email The email address for the person
+	 * @param website A website to associate with the person
+	 */
+	public PersonImpl(String name, String email, String webSite)
 	{
 		this.name = name;
 		this.email = email;
@@ -37,12 +56,12 @@ public class PersonImpl implements Person {
 	}
 
 	@Override
-	public URI getWebSite() {
+	public String getWebSite() {
 		return webSite;
 	}
 
 	@Override
-	public void setWebSite(URI webSite) {
+	public void setWebSite(String webSite) {
 		this.webSite = webSite;
 	}
 

@@ -1,0 +1,1639 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:html="http://www.w3.org/1999/xhtml"><head><meta charset="UTF-8"/><style type="text/css">
+      .optionalresource {
+      }
+      .optionalmethod1 {
+      }
+      .showoptionalresource {
+        display: none;
+      }
+      body {
+        font-family: sans-serif;
+        font-size: 0.85em;
+        margin: 2em 2em;
+      }
+      .methods {
+        margin-left: 2em;
+        margin-bottom: 2em;
+      }
+      .method {
+        background-color: #eef;
+        border: 1px solid #DDDDE6;
+        padding: .5em;
+        margin-bottom: 1em;
+      /* width: 50em */
+      }
+      .methodNameTable {
+        width: 100%;
+        border: 0px;
+        border-bottom: 2px solid white;
+        font-size: 1.4em;
+      }
+      .methodNameTd {
+        background-color: #eef;
+      }
+      h1 {
+        font-size: 2m;
+        margin-bottom: 0em;
+      }
+      h2 {
+        border-bottom: 1px solid black;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-size: 1.5em;
+      }
+      h3 {
+        color: #FF6633;
+        font-size: 1.35em;
+        margin-top: .5em;
+        margin-bottom: 0em;
+      }
+      h5 {
+        font-size: 1.2em;
+        color: #99a;
+        margin: 0.5em 0em 0.25em 0em;
+      }
+      h6 {
+        color: #700000;
+        font-size: 1em;
+        margin: 1em 0em 0em 0em;
+      }
+      .h7 {
+        margin-top: .75em;
+        font-size: 1em;
+        font-weight: bold;
+        font-style: italic;
+        color: blue;
+      }
+      .h8 {
+        margin-top: .75em;
+        font-size: 1em;
+        font-weight: bold;
+        font-style: italic;
+        color: black;
+      }
+      tt {
+        font-size: 1em;
+      }
+      table {
+        margin-bottom: 0.5em;
+        border: 1px solid #E0E0E0;
+        width: 100%;
+      }
+      th {
+        text-align: left;
+        font-weight: normal;
+        font-size: 1em;
+        color: black;
+        background-color: #DDDDE6;
+        padding: 3px 6px;
+        border: 1px solid #B1B1B8;
+      }
+      td {
+        padding: 3px 6px;
+        vertical-align: top;
+        background-color: #F6F6FF;
+        font-size: 0.85em;
+      }
+      p {
+        margin-top: 1.2em;
+        margin-bottom: 0em;
+      }
+      td.summary {
+        background-color: white;
+      }
+      td.summarySeparator {
+        padding: 1px;
+      }</style><title>OAuth 2.0 Web Application Description</title></head><body><button class="optionalresource" onclick="hideShowOptions('none')">Hide Optional Resources and
+          Methods</button><button class="showoptionalresource" onclick="hideShowOptions('')">Show Optional Resources and
+          Methods</button><script>
+          function hideShowOptions(show)
+          {
+            var hide = show == "none" ? "" : "none";
+            document.styleSheets[0].rules[0].style.display = show;
+            document.styleSheets[0].rules[1].style.display = show;
+            document.styleSheets[0].rules[2].style.display = hide;
+          }
+        </script><h1>OAuth 2.0 Web Application Description</h1><br/><b>OAuth 2.0 Web Application Description: </b><br/>
+    <p>This document represents a a description of OAuth 2.0 in the
+      Web Application Description Language (WADL). It is derived from
+      the text of <a href="http://tools.ietf.org/html/rfc6749">RFC-6749</a>. </p>
+    <p/>
+    <h2>License</h2>
+    <p>Copyright (c) 2012 IETF Trust and the persons identified as
+      authors of the code. All rights reserved. </p>
+    <ul>
+      <li> Redistribution and use in source and binary forms, with or
+        without modification, are permitted provided that the following
+        conditions are met: </li>
+      <li> Redistributions of source code must retain the above
+        copyright notice, this list of conditions and the following
+        disclaimer.</li>
+      <li> Redistributions in binary form must reproduce the above
+        copyright notice, this list of conditions and the following
+        disclaimer in the documentation and/or other materials provided
+        with the distribution. </li>
+    </ul>
+    <p>Neither the name of Internet Society, IETF or IETF Trust, nor
+      the names of specific contributors, may be used to endorse or
+      promote products derived from this software without specific prior
+      written permission.</p>
+    <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+      CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES,
+      INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+      MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+      DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+      BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+      EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+      TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+      ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+      TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+      THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+      SUCH DAMAGE. </p>
+  <h2 id="Summary">Summary</h2><table><tr><th style="width: 12em;">Resource<br/><span style="float:right">Method</span></th><th>Conformance</th><th>Description</th></tr><tbody class="resource"><tr><td class="summary"><a href="#authorization_endpoint"><i>authorization_endpoint</i></a></td><td class="summary"/><td class="summary"> The authorization endpoint is used to interact with the
+        resource owner and obtain an authorization grant. The
+        authorization server MUST first verify the identity of the
+        resource owner. The way in which the authorization server
+        authenticates the resource owner (e.g., username and password
+        login, session cookies) is beyond the scope of this
+        specification. </td></tr><tr class="method1"><td style="text-align: right"><a href="#d0e81"/></td><td/><td/></tr></tbody><tbody class="resource"><tr><td class="summary"><a href="#authorization_grant"><i>authorization_grant</i></a></td><td class="summary"/><td class="summary">The authorization code is obtained by using an authorization
+        server as an intermediary between the client and resource owner.
+        Instead of requesting authorization directly from the resource
+        owner, the client directs the resource owner to an authorization
+        server (via its user-agent as defined in [RFC2616]), which in
+        turn directs the resource owner back to the client with the
+        authorization code. </td></tr><tr class="method1"><td style="text-align: right"><a href="#d0e101">GET</a></td><td/><td> To request an access token, the client obtains
+          authorization from the resource owner. The authorization is
+          expressed in the form of an authorization grant, which the
+          client uses to request the access token. OAuth defines four
+          grant types: authorization code, implicit, resource owner
+          password credentials, and client credentials. It also provides
+          an extension mechanism for defining additional grant
+          types.</td></tr></tbody><tbody class="resource"><tr><td class="summary"><a href="#implicit_grant"><i>implicit_grant</i></a></td><td class="summary"/><td class="summary"> The implicit grant is a simplified authorization code flow
+        optimized for clients implemented in a browser using a scripting
+        language such as JavaScript. In the implicit flow, instead of
+        issuing the client an authorization code, the client is issued
+        an access token directly (as the result of the resource owner
+        authorization). The grant type is implicit, as no intermediate
+        credentials (such as an authorization code) are issued (and
+        later used to obtain an access token). </td></tr><tr class="method1"><td style="text-align: right"><a href="#d0e448">GET</a></td><td/><td>The implicit grant type is used to obtain access tokens (it
+          does not support the issuance of refresh tokens) and is
+          optimized for public clients known to operate a particular
+          redirection URI. These clients are typically implemented in a
+          browser using a scripting language such as JavaScript.</td></tr></tbody><tbody class="resource"><tr><td class="summary"><a href="#access_token"><i>access_token</i></a></td><td class="summary"/><td class="summary">The token endpoint is used by the client to obtain an access
+        token by presenting its authorization grant or refresh token.
+        The token endpoint is used with every authorization grant except
+        for the implicit grant type (since an access token is issued
+        directly). </td></tr><tr class="method1"><td style="text-align: right"><a href="#d0e861">POST</a></td><td/><td>The client makes a request to the token endpoint by sending
+          the following parameters using the
+          "application/x-www-form-urlencoded" format per Appendix B with
+          a character encoding of UTF-8 in the HTTP request
+          entity-body:</td></tr></tbody><tbody class="resource"><tr><td class="summary"><a href="#password_credentials_grant"><i>password_credentials_grant</i></a></td><td class="summary"/><td class="summary">The resource owner password credentials grant type is
+        suitable in cases where the resource owner has a trust
+        relationship with the client, such as the device operating
+        system or a highly privileged application. The authorization
+        server should take special care when enabling this grant type
+        and only allow it when other flows are not viable.</td></tr><tr class="method1"><td style="text-align: right"><a href="#d0e1243">POST</a></td><td/><td>The method through which the client obtains the resource
+          owner credentials is beyond the scope of this specification.
+          The client MUST discard the credentials once an access token
+          has been obtained.</td></tr></tbody><tbody class="resource"><tr><td class="summary"><a href="#client_credentials_grant"><i>client_credentials_grant</i></a></td><td class="summary"/><td class="summary">The client can request an access token using only its client
+        credentials (or other supported means of authentication) when
+        the client is requesting access to the protected resources under
+        its control, or those of another resource owner that have been
+        previously arranged with the authorization server (the method of
+        which is beyond the scope of this specification).</td></tr><tr class="method1"><td style="text-align: right"><a href="#d0e1384">POST</a></td><td/><td>Since the client authentication is used as the
+          authorization grant, no additional authorization request is
+          needed.</td></tr></tbody></table><p/><h2 id="Grammars">Grammars</h2><p><a href=""/></p><h2 id="Resources">Resources</h2><div class="resource"><h3><a name="authorization_endpoint"><i>authorization_endpoint</i></a></h3>
+      <h2 id="section-3.1">3.1. Authorization Endpoint</h2>
+      <p> The authorization endpoint is used to interact with the
+        resource owner and obtain an authorization grant. The
+        authorization server MUST first verify the identity of the
+        resource owner. The way in which the authorization server
+        authenticates the resource owner (e.g., username and password
+        login, session cookies) is beyond the scope of this
+        specification. </p>
+      <p>The means through which the client obtains the location of
+        the authorization endpoint are beyond the scope of this
+        specification, but the location is typically provided in the
+        service documentation. </p>
+      <p>The endpoint URI MAY include an
+        "application/x-www-form-urlencoded" formatted (per Appendix B)
+        query component ([RFC3986] Section 3.4), which MUST be retained
+        when adding additional query parameters. The endpoint URI MUST
+        NOT include a fragment component. </p>
+      <p>Since requests to the authorization endpoint result in user
+        authentication and the transmission of clear-text credentials
+        (in the HTTP response), the authorization server MUST require
+        the use of TLS as described in <a href="#section-1.6">Section
+          1.6</a> when sending requests to the authorization endpoint. </p>
+      <p>The authorization server MUST support the use of the HTTP
+        "GET" method [RFC2616] for the authorization endpoint and MAY
+        support the use of the "POST" method as well.</p>
+      <p>Parameters sent without a value MUST be treated as if they
+        were omitted from the request. The authorization server MUST
+        ignore unrecognized request parameters. Request and response
+        parameters MUST NOT be included more than once.</p>
+    <h5>Methods</h5><div class="methods"><div class="method method1"><table class="methodNameTable"><tr><td class="methodNameTd" style="font-weight: bold"><a name="d0e81"/> <i>authorization_endpoint</i></td><td class="methodNameTd" style="text-align: right"/></tr></table><h6>request</h6><div style="margin-left: 2em"> unspecified </div><h6>responses</h6><div style="margin-left: 2em"> unspecified </div></div></div></div><div class="resource"><h3><a name="authorization_grant"><i>authorization_grant</i></a></h3>
+      <h3 id="section-1.3.1">1.3.1. Authorization Code</h3>
+      <p>The authorization code is obtained by using an authorization
+        server as an intermediary between the client and resource owner.
+        Instead of requesting authorization directly from the resource
+        owner, the client directs the resource owner to an authorization
+        server (via its user-agent as defined in [RFC2616]), which in
+        turn directs the resource owner back to the client with the
+        authorization code. </p>
+      <p> Before directing the resource owner back to the client with
+        the authorization code, the authorization server authenticates
+        the resource owner and obtains authorization. Because the
+        resource owner only authenticates with the authorization server,
+        the resource owner's credentials are never shared with the
+        client. </p>
+      <p> The authorization code provides a few important security
+        benefits, such as the ability to authenticate the client, as
+        well as the transmission of the access token directly to the
+        client without passing it through the resource owner's
+        user-agent and potentially exposing it to others, including the
+        resource owner. </p>
+    <h5>Methods</h5><div class="methods"><div class="method method1"><table class="methodNameTable"><tr><td class="methodNameTd" style="font-weight: bold"><a name="d0e101">GET</a> <i>authorization_grant</i></td><td class="methodNameTd" style="text-align: right"/></tr></table>
+        <h1 id="section-4">4. Obtaining Authorization</h1>
+        <p> To request an access token, the client obtains
+          authorization from the resource owner. The authorization is
+          expressed in the form of an authorization grant, which the
+          client uses to request the access token. OAuth defines four
+          grant types: authorization code, implicit, resource owner
+          password credentials, and client credentials. It also provides
+          an extension mechanism for defining additional grant
+          types.</p>
+        <h2 id="section-4.1">4.1. Authorization Code Grant</h2>
+        <p>The authorization code grant type is used to obtain both
+          access tokens and refresh tokens and is optimized for
+          confidential clients. Since this is a redirection-based flow,
+          the client must be capable of interacting with the resource
+          owner's user-agent (typically a web browser) and capable of
+          receiving incoming requests (via redirection) from the
+          authorization server.</p>
+        <pre xml:space="preserve"> 
+     +----------+
+     | Resource |
+     |   Owner  |
+     |          |
+     +----------+
+          ^
+          |
+         (B)
+     +----|-----+          Client Identifier      +---------------+
+     |         -+----(A)-- &amp; Redirection URI ----&gt;|               |
+     |  User-   |                                 | Authorization |
+     |  Agent  -+----(B)-- User authenticates ---&gt;|     Server    |
+     |          |                                 |               |
+     |         -+----(C)-- Authorization Code ---&lt;|               |
+     +-|----|---+                                 +---------------+
+       |    |                                         ^      v
+      (A)  (C)                                        |      |
+       |    |                                         |      |
+       ^    v                                         |      |
+     +---------+                                      |      |
+     |         |&gt;---(D)-- Authorization Code ---------'      |
+     |  Client |          &amp; Redirection URI                  |
+     |         |                                             |
+     |         |&lt;---(E)----- Access Token -------------------'
+     +---------+       (w/ Optional Refresh Token)
+     
+   Note: The lines illustrating steps (A), (B), and (C) are broken into 
+   two parts as they pass through the user-agent.
+   
+                   Figure 3: Authorization Code Flow
+
+        </pre>
+        <p> The flow illustrated in Figure 3 includes the following
+          steps: </p>
+        <ol type="A">
+          <li>The client initiates the flow by directing the resource
+            owner's user-agent to the authorization endpoint. The client
+            includes its client identifier, requested scope, local
+            state, and a redirection URI to which the authorization
+            server will send the user-agent back once access is granted
+            (or denied). </li>
+          <li>The authorization server authenticates the resource
+            owner (via the user-agent) and establishes whether the
+            resource owner grants or denies the client's access request. </li>
+          <li>Assuming the resource owner grants access, the
+            authorization server redirects the user-agent back to the
+            client using the redirection URI provided earlier (in the
+            request or during client registration). The redirection URI
+            includes an authorization code and any local state provided
+            by the client earlier.</li>
+          <li>The client requests an access token from the
+            authorization server's token endpoint by including the
+            authorization code received in the previous step. When
+            making the request, the client authenticates with the
+            authorization server. The client includes the redirection
+            URI used to obtain the authorization code for
+            verification.</li>
+          <li>The authorization server authenticates the client,
+            validates the authorization code, and ensures that the
+            redirection URI received matches the URI used to redirect
+            the client in step (C). If valid, the authorization server
+            responds back with an access token and, optionally, a
+            refresh token.</li>
+        </ol>
+      <h6>request</h6><div style="margin-left: 2em">
+          <h3 id="section-4.1.1">4.1.1. Authorization Request</h3>
+          <p>The client constructs the request URI by adding the
+            qameters to the query component of the authorization
+            endpoint URI using the "application/x-www-form-urlencoded"
+            format, per Appendix B: </p>
+          <p> The client directs the resource owner to the constructed
+            URI using an HTTP redirection response, or by other means
+            available to it via the user-agent. </p>
+          <p> For example, the client directs the user-agent to make
+            the following HTTP request using TLS (with extra line breaks
+            for display purposes only): </p>
+          <pre xml:space="preserve">
+GET /authorize?response_type=code&amp;client_id=s6BhdRkqt3&amp;state=xyz
+&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+HTTP/1.1 Host: server.example.com
+          </pre>
+          <p> The authorization server validates the request to ensure
+            that all required parameters are present and valid. If the
+            request is valid, the authorization server authenticates the
+            resource owner and obtains an authorization decision (by
+            asking the resource owner or by establishing approval via
+            other means). </p>
+          <p> When a decision is established, the authorization server
+            directs the user-agent to the provided client redirection
+            URI using an HTTP redirection response, or by other means
+            available to it via the user-agent. </p>
+        <div class="h7">header params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">Authorization</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2"/></tr></table><p/><div class="h7">query params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">response_type</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a><br/>(required)<br/>fixed: <tt>code</tt></td><td colspan="2">
+            <p>Value MUST be set to "code".</p>
+          </td></tr><tr><td><span style="font-weight: bold">client_id</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a><br/>(required)</td><td colspan="2">
+            <p>The client identifier issued to the client during the
+              registration process described by <a href="http://tools.ietf.org/html/rfc6749#section-2.2">Section 2.2</a>.</p>
+            <h2 id="section-2.2">2.2. Client Identifier</h2>
+            <p> The authorization server issues the registered client
+              a client identifier -- a unique string representing the
+              registration information provided by the client. The
+              client identifier is not a secret; it is exposed to the
+              resource owner and MUST NOT be used alone for client
+              authentication. The client identifier is unique to the
+              authorization server. </p>
+            <p> The client identifier string size is left undefined by
+              this specification. The client should avoid making
+              assumptions about the identifier size. The authorization
+              server SHOULD document the size of any identifier it
+              issues. </p>
+          </td></tr><tr><td><span style="font-weight: bold">redirect_uri</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a></td><td colspan="2">
+            <p>As described in <a href="http://tools.ietf.org/html/rfc6749#section-3.1.2">Section 3.1.2.</a>
+            </p>
+            <h3 id="section-3.1.2">3.1.2. Redirection Endpoint</h3>
+            <p>After completing its interaction with the resource
+              owner, the authorization server directs the resource
+              owner's user-agent back to the client. The authorization
+              server redirects the user-agent to the client's
+              redirection endpoint previously established with the
+              authorization server during the client registration
+              process or when making the authorization request. </p>
+            <p> The redirection endpoint URI MUST be an absolute URI
+              as defined by <a href="http://tools.ietf.org/html/rfc3986#section-4.3">[RFC3986] Section 4.3</a>. The endpoint URI MAY
+              include an "application/x-www-form-urlencoded" formatted
+              (per Appendix B) query component ([RFC3986] Section 3.4),
+              which MUST be retained when adding additional query
+              parameters. The endpoint URI MUST NOT include a fragment
+              component. </p>
+          </td></tr><tr><td><span style="font-weight: bold">scope</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a></td><td colspan="2">
+            <p>The scope of the access request as described by <a href="http://tools.ietf.org/html/rfc6749#section-3.3">Section 3.3</a>.</p>
+            <h2 id="section-3.3">3.3. Access Token Scope</h2>
+            <p>The authorization and token endpoints allow the client
+              to specify the scope of the access request using the
+              "scope" request parameter. In turn, the authorization
+              server uses the "scope" response parameter to inform the
+              client of the scope of the access token issued. </p>
+            <p> The value of the scope parameter is expressed as a
+              list of space- delimited, case-sensitive strings. The
+              strings are defined by the authorization server. If the
+              value contains multiple space-delimited strings, their
+              order does not matter, and each string adds an additional
+              access range to the requested scope. </p>
+            <pre xml:space="preserve">scope = scope-token *( SP scope-token ) 
+scope-token = 1*( %x21 / %x23-5B / %x5D-7E )</pre>
+            <p>The authorization server MAY fully or partially ignore
+              the scope requested by the client, based on the
+              authorization server policy or the resource owner's
+              instructions. If the issued access token scope is
+              different from the one requested by the client, the
+              authorization server MUST include the "scope" response
+              parameter to inform the client of the actual scope
+              granted. </p>
+            <p>If the client omits the scope parameter when requesting
+              authorization, the authorization server MUST either
+              process the request using a pre-defined default value or
+              fail the request indicating an invalid scope. The
+              authorization server SHOULD document its scope
+              requirements and default value (if defined). </p>
+          </td></tr><tr><td><span style="font-weight: bold">state</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a></td><td colspan="2">
+            <p>RECOMMENDED. An opaque value used by the client to
+              maintain state between the request and callback. The
+              authorization server includes this value when redirecting
+              the user-agent back to the client. The parameter SHOULD be
+              used for preventing cross-site request forgery as
+              described in <a href="#section-10.12">Section
+                10.12</a>.</p>
+            <h2 id="section-10.12">10.12. Cross-Site Request
+              Forgery</h2>
+            <p> Cross-site request forgery (CSRF) is an exploit in
+              which an attacker causes the user-agent of a victim
+              end-user to follow a malicious URI (e.g., provided to the
+              user-agent as a misleading link, image, or redirection) to
+              a trusting server (usually established via the presence of
+              a valid session cookie). </p>
+            <p>A CSRF attack against the client's redirection URI
+              allows an attacker to inject its own authorization code or
+              access token, which can result in the client using an
+              access token associated with the attacker's protected
+              resources rather than the victim's (e.g., save the
+              victim's bank account information to a protected resource
+              controlled by the attacker). </p>
+            <p> The client MUST implement CSRF protection for its
+              redirection URI. This is typically accomplished by
+              requiring any request sent to the redirection URI endpoint
+              to include a value that binds the request to the
+              user-agent's authenticated state (e.g., a hash of the
+              session cookie used to authenticate the user-agent). The
+              client SHOULD utilize the "state" request parameter to
+              deliver this value to the authorization server when making
+              an authorization request. </p>
+            <p> Once authorization has been obtained from the
+              end-user, the authorization server redirects the
+              end-user's user-agent back to the client with the required
+              binding value contained in the "state" parameter. The
+              binding value enables the client to verify the validity of
+              the request by matching the binding value to the
+              user-agent's authenticated state. The binding value used
+              for CSRF protection MUST contain a non-guessable value (as
+              described in <a href="#Section-10.10">Section
+                10.10</a>), and the user-agent's authenticated state
+              (e.g., session cookie, HTML5 local storage) MUST be kept
+              in a location accessible only to the client and the
+              user-agent (i.e., protected by same-origin policy). </p>
+            <p> A CSRF attack against the authorization server's
+              authorization endpoint can result in an attacker obtaining
+              end-user authorization for a malicious client without
+              involving or alerting the end-user. </p>
+            <p> The authorization server MUST implement CSRF
+              protection for its authorization endpoint and ensure that
+              a malicious client cannot obtain authorization without the
+              awareness and explicit consent of the resource owner.
+            </p>
+          </td></tr></table><p/></div><h6>responses</h6><div style="margin-left: 2em"><div class="h8">302</div>
+          <h3 id="section-4.1.2">4.1.2. Authorization Response</h3>
+          <p>If the resource owner grants the access request, the
+            authorization server issues an authorization code and
+            delivers it to the client by adding the following parameters
+            to the query component of the redirection URI using the
+            "application/x-www-form-urlencoded" format, per Appendix B: </p>
+          <p> For example, the authorization server redirects the
+            user-agent by sending the following HTTP response: </p>
+          <pre xml:space="preserve">
+HTTP/1.1 302 Found
+Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA
+&amp;state=xyz 
+            </pre>
+          <p>The client MUST ignore unrecognized response parameters.
+            The authorization code string size is left undefined by this
+            specification. The client should avoid making assumptions
+            about code value sizes. The authorization server SHOULD
+            document the size of any value it issues. </p>
+        <div style="margin-left: 2em"><div class="h7">headers</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">Location</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#uri">uri</a></td><td colspan="2">The redirection URI sent to the client. </td></tr></table><div class="h7">query parameters</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">code</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a><br/>(required)</td><td colspan="2">
+            <p>The authorization code generated by the authorization
+              server. The authorization code MUST expire shortly after
+              it is issued to mitigate the risk of leaks. A maximum
+              authorization code lifetime of 10 minutes is RECOMMENDED.
+              The client MUST NOT use the authorization code more than
+              once. If an authorization code is used more than once, the
+              authorization server MUST deny the request and SHOULD
+              revoke (when possible) all tokens previously issued based
+              on that authorization code. The authorization code is
+              bound to the client identifier and redirection URI.</p>
+          </td></tr><tr><td><span style="font-weight: bold">state</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a></td><td colspan="2">
+            <p>REQUIRED if the "state" parameter was present in the
+              client authorization request. The exact value received
+              from the client.</p>
+          </td></tr></table></div><div class="h8">303</div>
+          <h4 id="section-4.1.2.1">4.1.2.1. Error Response</h4>
+          <p>If the request fails due to a missing, invalid, or
+            mismatching redirection URI, or if the client identifier is
+            missing or invalid, the authorization server SHOULD inform
+            the resource owner of the error and MUST NOT automatically
+            redirect the user-agent to the invalid redirection URI. </p>
+          <p>If the resource owner denies the access request or if the
+            request fails for reasons other than a missing or invalid
+            redirection URI, the authorization server informs the client
+            by adding the following parameters to the query component of
+            the redirection URI using the
+            "application/x-www-form-urlencoded" format, per Appendix
+            B:</p>
+          <p>For example, the authorization server redirects the
+            user-agent by sending the following HTTP response:</p>
+          <pre xml:space="preserve">
+HTTP/1.1 302 Found
+Location: https://client.example.com/cb?error=access_denied&amp;state=xyz
+            </pre>
+        <div style="margin-left: 2em"><div class="h7">parameters</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td rowspan="9"><span style="font-weight: bold">error</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">A single ASCII [USASCII] error code from the
+            following:Values for the "error" parameter MUST NOT include
+            characters outside the set %x20-21 / %x23-5B /
+            %x5D-7E.</td></tr><tr><td><b>Values:</b></td><td><b>Description</b></td></tr><tr><td><tt>invalid_request</tt></td><td>The request is missing a required parameter, includes
+              an invalid parameter value, includes a parameter more than
+              once, or is otherwise malformed.</td></tr><tr><td><tt>unauthorized_client</tt></td><td>The client is not authorized to request an
+              authorization code using this method.</td></tr><tr><td><tt>access_denied</tt></td><td>The resource owner or authorization server denied the
+              request.</td></tr><tr><td><tt>unsupported_response_type</tt></td><td>The authorization server does not support obtaining an
+              authorization code using this method.</td></tr><tr><td><tt>invalid_scope</tt></td><td>The requested scope is invalid, unknown, or
+              malformed.</td></tr><tr><td><tt>server_error</tt></td><td>The authorization server encountered an unexpected
+              condition that prevented it from fulfilling the request.
+              (This error code is needed because a 500 Internal Server
+              Error HTTP status code cannot be returned to the client
+              via an HTTP redirect.)</td></tr><tr><td><tt>temporarily_unavailable</tt></td><td>The authorization server is currently unable to handle
+              the request due to a temporary overloading or maintenance
+              of the server. (This error code is needed because a 503
+              Service Unavailable HTTP status code cannot be returned to
+              the client via an HTTP redirect.)</td></tr><tr><td><span style="font-weight: bold">error_description</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">Human-readable ASCII [USASCII] text providing additional
+            information, used to assist the client developer in
+            understanding the error that occurred. Values for the
+            "error_description" parameter MUST NOT include characters
+            outside the set %x20-21 / %x23-5B / %x5D-7E. </td></tr><tr><td><span style="font-weight: bold">error_uri</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">A URI identifying a human-readable web page with
+            information about the error, used to provide the client
+            developer with additional information about the error.
+            Values for the "error_uri" parameter MUST conform to the
+            URI-reference syntax and thus MUST NOT include characters
+            outside the set %x21 / %x23-5B / %x5D-7E.</td></tr><tr><td><span style="font-weight: bold">state</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">REQUIRED if a "state" parameter was present in the client
+            authorization request. The exact value received from the
+            client.</td></tr></table></div></div></div></div></div><div class="resource"><h3><a name="implicit_grant"><i>implicit_grant</i></a></h3>
+      <h3 id="section-1.3.2">1.3.2. Implicit</h3>
+      <p> The implicit grant is a simplified authorization code flow
+        optimized for clients implemented in a browser using a scripting
+        language such as JavaScript. In the implicit flow, instead of
+        issuing the client an authorization code, the client is issued
+        an access token directly (as the result of the resource owner
+        authorization). The grant type is implicit, as no intermediate
+        credentials (such as an authorization code) are issued (and
+        later used to obtain an access token). </p>
+      <p>When issuing an access token during the implicit grant flow,
+        the authorization server does not authenticate the client. In
+        some cases, the client identity can be verified via the
+        redirection URI used to deliver the access token to the client.
+        The access token may be exposed to the resource owner or other
+        applications with access to the resource owner's user-agent. </p>
+      <p>Implicit grants improve the responsiveness and efficiency of
+        some clients (such as a client implemented as an in-browser
+        application), since it reduces the number of round trips
+        required to obtain an access token. However, this convenience
+        should be weighed against the security implications of using
+        implicit grants, such as those described in Sections 10.3 and
+        10.16, especially when the authorization code grant type is
+        available.</p>
+    <h5>Methods</h5><div class="methods"><div class="method method1"><table class="methodNameTable"><tr><td class="methodNameTd" style="font-weight: bold"><a name="d0e448">GET</a> <i>implicit_grant</i></td><td class="methodNameTd" style="text-align: right"/></tr></table>
+        <h2>4.2. Implicit Grant</h2>
+        <p>The implicit grant type is used to obtain access tokens (it
+          does not support the issuance of refresh tokens) and is
+          optimized for public clients known to operate a particular
+          redirection URI. These clients are typically implemented in a
+          browser using a scripting language such as JavaScript.</p>
+        <p>Since this is a redirection-based flow, the client must be
+          capable of interacting with the resource owner's user-agent
+          (typically a web browser) and capable of receiving incoming
+          requests (via redirection) from the authorization
+          server.</p>
+        <p>Unlike the authorization code grant type, in which the
+          client makes separate requests for authorization and for an
+          access token, the client receives the access token as the
+          result of the authorization request.</p>
+        <p>The implicit grant type does not include client
+          authentication, and relies on the presence of the resource
+          owner and the registration of the redirection URI. Because the
+          access token is encoded into the redirection URI, it may be
+          exposed to the resource owner and other applications residing
+          on the same device.</p>
+        <pre xml:space="preserve"> 
+     +----------+
+     | Resource |
+     |  Owner   |
+     |          |
+     +----------+
+          ^
+          |
+         (B)
+     +----|-----+          Client Identifier     +---------------+
+     |         -+----(A)-- &amp; Redirection URI ---&gt;|               |
+     |  User-   |                                | Authorization |
+     |  Agent  -|----(B)-- User authenticates --&gt;|     Server    |
+     |          |                                |               |
+     |          |&lt;---(C)--- Redirection URI ----&lt;|               |
+     |          |          with Access Token     +---------------+
+     |          |            in Fragment
+     |          |                                +---------------+
+     |          |----(D)--- Redirection URI ----&gt;|   Web-Hosted  |
+     |          |          without Fragment      |     Client    |
+     |          |                                |    Resource   |
+     |     (F)  |&lt;---(E)------- Script ---------&lt;|               |
+     |          |                                +---------------+
+     +-|--------+
+       |    |
+      (A)  (G) Access Token
+       |    |
+       ^    v
+     +---------+
+     |         |
+     |  Client |
+     |         |
+     +---------+
+
+   Note: The lines illustrating steps (A) and (B) are broken into two
+   parts as they pass through the user-agent.
+
+                       Figure 4: Implicit Grant Flow
+ </pre>
+        <p>The flow illustrated in Figure 4 includes the following
+          steps:</p>
+        <ol type="A">
+          <li>The client initiates the flow by directing the resource
+            owner's user-agent to the authorization endpoint. The client
+            includes its client identifier, requested scope, local
+            state, and a redirection URI to which the authorization
+            server will send the user-agent back once access is granted
+            (or denied).</li>
+          <li>The authorization server authenticates the resource
+            owner (via the user-agent) and establishes whether the
+            resource owner grants or denies the client's access
+            request.</li>
+          <li>Assuming the resource owner grants access, the
+            authorization server redirects the user-agent back to the
+            client using the redirection URI provided earlier. The
+            redirection URI includes the access token in the URI
+            fragment.</li>
+          <li>The user-agent follows the redirection instructions by
+            making a request to the web-hosted client resource (which
+            does not include the fragment per [RFC2616]). The user-agent
+            retains the fragment information locally.</li>
+          <li>The web-hosted client resource returns a web page
+            (typically an HTML document with an embedded script) capable
+            of accessing the full redirection URI including the fragment
+            retained by the user-agent, and extracting the access token
+            (and other parameters) contained in the fragment.</li>
+          <li>The user-agent executes the script provided by the
+            web-hosted client resource locally, which extracts the
+            access token.</li>
+          <li>The user-agent passes the access token to the
+            client.</li>
+        </ol>
+        <p>See Sections 1.3.2 and 9 for background on using the
+          implicit grant.</p>
+        <p>See Sections 10.3 and 10.16 for important security
+          considerations when using the implicit grant.</p>
+      <h6>request</h6><div style="margin-left: 2em">
+          <h3 id="section-4.2.1">4.2.1. Authorization Request</h3>
+          <p>The client constructs the request URI by adding the
+            following parameters to the query component of the
+            authorization endpoint URI using the
+            "application/x-www-form-urlencoded" format, per Appendix B:
+          </p>
+        <div class="h7">query params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">response_type</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+            <p>Value MUST be set to "token".</p>
+          </td></tr><tr><td><span style="font-weight: bold">client_id</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+            <p>The client identifier as described in <a href="#section-2.2">Section 2.2</a>.</p>
+          </td></tr><tr><td><span style="font-weight: bold">redirect_uri</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <p>As described in <a href="#section-3.1.2">Section
+                3.1.2</a>.</p>
+          </td></tr><tr><td><span style="font-weight: bold">scope</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <p>The scope of the access request as described by Section
+              3.3.</p>
+          </td></tr><tr><td><span style="font-weight: bold">state</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <p> RECOMMENDED. An opaque value used by the client to
+              maintain state between the request and callback. The
+              authorization server includes this value when redirecting
+              the user-agent back to the client. The parameter SHOULD be
+              used for preventing cross-site request forgery as
+              described in <a href="#section-10.12">Section
+                10.12</a>.</p>
+          </td></tr></table><p/></div><h6>responses</h6><div style="margin-left: 2em"><div class="h8">302</div>
+          <h3 id="section-4.2.2">4.2.2. Access Token Response</h3>
+          <p>If the resource owner grants the access request, the
+            authorization server issues an access token and delivers it
+            to the client by adding the following parameters to the
+            fragment component of the redirection URI using the
+            "application/x-www-form-urlencoded" format, per Appendix
+            B:</p>
+          <p>The authorization server MUST NOT issue a refresh
+            token.</p>
+          <p>For example, the authorization server redirects the
+            user-agent by sending the following HTTP response (with
+            extra line breaks for display purposes only):</p>
+          <pre xml:space="preserve">HTTP/1.1 302 Found
+Location: http://example.com/cb#access_token=2YotnFZFEjr1zCsicMWpAA
+          &amp;state=xyz&amp;token_type=example&amp;expires_in=3600
+          </pre>
+          <p>Developers should note that some user-agents do not
+            support the inclusion of a fragment component in the HTTP
+            "Location" response header field. Such clients will require
+            using other methods for redirecting the client than a 3xx
+            redirection response -- for example, returning an HTML page
+            that includes a 'continue' button with an action linked to
+            the redirection URI.</p>
+          <p>The client MUST ignore unrecognized response parameters.
+            The access token string size is left undefined by this
+            specification. The client should avoid making assumptions
+            about value sizes. The authorization server SHOULD document
+            the size of any value it issues.</p>
+        <div style="margin-left: 2em"><div class="h7">query parameters</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">access_token</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+            <p>The access token issued by the authorization
+              server.</p>
+          </td></tr><tr><td rowspan="4"><span style="font-weight: bold">token_type</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+            <p>The type of the token issued as described in Section
+              7.1. Value is case insensitive.</p>
+            <h2 id="section-7.1">7.1. Access Token Types</h2>
+            <p> The access token type provides the client with the
+              information required to successfully utilize the access
+              token to make a protected resource request (along with
+              type-specific attributes). The client MUST NOT use an
+              access token if it does not understand the token
+              type.</p>
+            <p>The examples below are provided for illustration
+              purposes only. Developers are advised to consult the [<a href="http://tools.ietf.org/html/rfc6750">RFC6750</a>]
+              and [<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-01">OAuth-HTTP-MAC</a>] specifications before use. </p>
+            <p>Each access token type definition specifies the
+              additional attributes (if any) sent to the client together
+              with the "access_token" response parameter. It also
+              defines the HTTP authentication method used to include the
+              access token when making a protected resource
+              request.</p>
+          </td></tr><tr><td><b>Values:</b></td><td><b>Description</b></td></tr><tr><td><tt>Bearer</tt></td><td><p> For example, the "bearer" token type defined in
+                [RFC6750] is utilized by simply including the access
+                token string in the request:</p>
+              <pre xml:space="preserve">GET /resource/1 HTTP/1.1
+Host: example.com
+Authorization: Bearer mF_9.B5f-4.1JqM</pre>
+            </td></tr><tr><td><tt>MAC</tt></td><td>
+              <p>while the "mac" token type defined in
+                [OAuth-HTTP-MAC] is utilized by issuing a Message
+                Authentication Code (MAC) key together with the access
+                token that is used to sign certain components of the
+                HTTP requests:</p>
+              <pre xml:space="preserve">GET /resource/1 HTTP/1.1
+Host: example.com
+Authorization: MAC id="h480djs93hd8",
+               nonce="274312:dj83hs9s",
+               mac="kDZvddkndxvhGRXZhvuDjEWhGeE="</pre>
+            </td></tr><tr><td><span style="font-weight: bold">expires_in</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <p>RECOMMENDED. The lifetime in seconds of the access
+              token. For example, the value "3600" denotes that the
+              access token will expire in one hour from the time the
+              response was generated. If omitted, the authorization
+              server SHOULD provide the expiration time via other means
+              or document the default value.</p>
+          </td></tr><tr><td><span style="font-weight: bold">scope</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <p>OPTIONAL, if identical to the scope requested by the
+              client; otherwise, REQUIRED. The scope of the access token
+              as described by <a href="#section-3.3">Section
+              3.3</a>.</p>
+          </td></tr><tr><td><span style="font-weight: bold">state</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+            <p>REQUIRED if the "state" parameter was present in the
+              client authorization request. The exact value received
+              from the client.</p>
+          </td></tr></table></div><div class="h8">303</div>
+          <h4 id="section-4.2.2.1">4.2.2.1. Error Response</h4>
+          <p>If the request fails due to a missing, invalid, or
+            mismatching redirection URI, or if the client identifier is
+            missing or invalid, the authorization server SHOULD inform
+            the resource owner of the error and MUST NOT automatically
+            redirect the user-agent to the invalid redirection
+            URI.</p>
+          <p>If the resource owner denies the access request or if the
+            request fails for reasons other than a missing or invalid
+            redirection URI, the authorization server informs the client
+            by adding the following parameters to the fragment component
+            of the redirection URI using the
+            "application/x-www-form-urlencoded" format, per Appendix
+            B:</p>
+          <p>Values for the "error" parameter MUST NOT include
+            characters outside the set %x20-21 / %x23-5B / %x5D-7E. </p>
+          <p>For example, the authorization server redirects the
+            user-agent by sending the following HTTP response:</p>
+          <pre xml:space="preserve">HTTP/1.1 302 Found
+Location: https://client.example.com/cb#error=access_denied&amp;state=xyz
+          </pre>
+        <div style="margin-left: 2em"><div class="h7">query parameters</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td rowspan="9"><span style="font-weight: bold">error</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+            <p>REQUIRED. A single ASCII [USASCII] error code from the
+              following: </p>
+          </td></tr><tr><td><b>Values:</b></td><td><b>Description</b></td></tr><tr><td><tt>invalid_request</tt></td><td>
+              <p>The request is missing a required parameter, includes
+                an invalid parameter value, includes a parameter more
+                than once, or is otherwise malformed. </p>
+            </td></tr><tr><td><tt>unauthorized_client</tt></td><td>
+              <p>The client is not authorized to request an access
+                token using this method. </p>
+            </td></tr><tr><td><tt>access_denied</tt></td><td>
+              <p>The resource owner or authorization server denied the
+                request. </p>
+            </td></tr><tr><td><tt>unsupported_response_type</tt></td><td>
+              <p>The authorization server does not support obtaining
+                an access token using this method. </p>
+            </td></tr><tr><td><tt>invalid_scope</tt></td><td>
+              <p>The requested scope is invalid, unknown, or
+                malformed. </p>
+            </td></tr><tr><td><tt>server_error</tt></td><td>
+              <p>The authorization server encountered an unexpected
+                condition that prevented it from fulfilling the request.
+                (This error code is needed because a 500 Internal Server
+                Error HTTP status code cannot be returned to the client
+                via an HTTP redirect.)</p>
+            </td></tr><tr><td><tt>temporarily_unavailable</tt></td><td>
+              <p>The authorization server is currently unable to
+                handle the request due to a temporary overloading or
+                maintenance of the server. (This error code is needed
+                because a 503 Service Unavailable HTTP status code
+                cannot be returned to the client via an HTTP redirect.)
+              </p>
+            </td></tr><tr><td><span style="font-weight: bold">error_description</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <p>OPTIONAL. Human-readable ASCII [USASCII] text providing
+              additional information, used to assist the client
+              developer in understanding the error that occurred. Values
+              for the "error_description" parameter MUST NOT include
+              characters outside the set %x20-21 / %x23-5B /
+              %x5D-7E.</p>
+          </td></tr><tr><td><span style="font-weight: bold">error_uri</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <p>OPTIONAL. A URI identifying a human-readable web page
+              with information about the error, used to provide the
+              client developer with additional information about the
+              error. Values for the "error_uri" parameter MUST conform
+              to the URI-reference syntax and thus MUST NOT include
+              characters outside the set %x21 / %x23-5B / %x5D-7E.</p>
+          </td></tr><tr><td><span style="font-weight: bold">state</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <p>REQUIRED if a "state" parameter was present in the
+              client authorization request. The exact value received
+              from the client. </p>
+          </td></tr></table></div></div></div></div></div><div class="resource"><h3><a name="access_token"><i>access_token</i></a></h3>
+      <h2 id="section-3.2">3.2. Token Endpoint</h2>
+      <p>The token endpoint is used by the client to obtain an access
+        token by presenting its authorization grant or refresh token.
+        The token endpoint is used with every authorization grant except
+        for the implicit grant type (since an access token is issued
+        directly). </p>
+      <p>The means through which the client obtains the location of
+        the token endpoint are beyond the scope of this specification,
+        but the location is typically provided in the service
+        documentation. </p>
+      <p>The endpoint URI MAY include an
+        "application/x-www-form-urlencoded" formatted (per Appendix B)
+        query component ([RFC3986] Section 3.4), which MUST be retained
+        when adding additional query parameters. The endpoint URI MUST
+        NOT include a fragment component.</p>
+      <p>Since requests to the token endpoint result in the
+        transmission of clear-text credentials (in the HTTP request and
+        response), the authorization server MUST require the use of TLS
+        as described in <a href="#section-1.6">Section 1.6</a> when
+        sending requests to the token endpoint. </p>
+      <p>The client MUST use the HTTP "POST" method when making access
+        token requests. </p>
+      <p>Parameters sent without a value MUST be treated as if they
+        were omitted from the request. The authorization server MUST
+        ignore unrecognized request parameters. Request and response
+        parameters MUST NOT be included more than once.</p>
+    <h5>Methods</h5><div class="methods"><div class="method method1"><table class="methodNameTable"><tr><td class="methodNameTd" style="font-weight: bold"><a name="d0e861">POST</a> <i>access_token</i></td><td class="methodNameTd" style="text-align: right"/></tr></table>
+        <h3 id="section-4.1.3">4.1.3. Access Token Request</h3>
+        <p>The client makes a request to the token endpoint by sending
+          the following parameters using the
+          "application/x-www-form-urlencoded" format per Appendix B with
+          a character encoding of UTF-8 in the HTTP request
+          entity-body:</p>
+        <p>If the client type is confidential or the client was issued
+          client credentials (or assigned other authentication
+          requirements), the client MUST authenticate with the
+          authorization server as described in <a href="#section-3.2.1">Section 3.2.1</a>. </p>
+        <p> For example, the client makes the following HTTP request
+          using TLS (with extra line breaks for display purposes only): </p>
+        <pre xml:space="preserve">
+POST /token HTTP/1.1
+Host: server.example.com
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Content-Type: application/x-www-form-urlencoded
+      
+grant_type=authorization_code&amp;code=SplxlOBeZQQYbYS6WxSbIA
+&amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+            </pre>
+      <h6>request</h6><div style="margin-left: 2em"><div class="h7">header params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">Authorization</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+            <h3 id="section-3.2.1">3.2.1. Client Authentication</h3>
+            <p>Confidential clients or other clients issued client
+              credentials MUST authenticate with the authorization
+              server as described in <a href="http://tools.ietf.org/html/rfc6749#section-2.3">Section 2.3</a> when making requests to the token
+              endpoint. Client authentication is used for: </p>
+            <ul>
+              <li>Enforcing the binding of refresh tokens and
+                authorization codes to the client they were issued to.
+                Client authentication is critical when an authorization
+                code is transmitted to the redirection endpoint over an
+                insecure channel or when the redirection URI has not
+                been registered in full.</li>
+              <li>Recovering from a compromised client by disabling
+                the client or changing its credentials, thus preventing
+                an attacker from abusing stolen refresh tokens. Changing
+                a single set of client credentials is significantly
+                faster than revoking an entire set of refresh
+                tokens.</li>
+              <li>Implementing authentication management best
+                practices, which require periodic credential rotation.
+                Rotation of an entire set of refresh tokens can be
+                challenging, while rotation of a single set of client
+                credentials is significantly easier.</li>
+            </ul>
+            <p>A client MAY use the "client_id" request parameter to
+              identify itself when sending requests to the token
+              endpoint. In the "authorization_code" "grant_type" request
+              to the token endpoint, an unauthenticated client MUST send
+              its "client_id" to prevent itself from inadvertently
+              accepting a code intended for a client with a different
+              "client_id". This protects the client from substitution of
+              the authentication code. (It provides no additional
+              security for the protected resource.) </p>
+          </td></tr></table><p/><div class="h7">query params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">grant_type</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a><br/>(required)<br/>fixed: <tt>authorization_code</tt></td><td colspan="2">
+            <p>Value MUST be set to "authorization_code".</p>
+          </td></tr><tr><td><span style="font-weight: bold">code</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a><br/>(required)</td><td colspan="2">
+            <p>The authorization code received from the authorization
+              server. </p>
+          </td></tr><tr><td><span style="font-weight: bold">redirect_uri</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a></td><td colspan="2">
+            <p>REQUIRED, if the "redirect_uri" parameter was included
+              in the authorization request as described in Section
+              4.1.1, and their values MUST be identical. </p>
+          </td></tr><tr><td><span style="font-weight: bold">client_id</span><br/><a href="http://www.w3.org/TR/xmlschema-2/#string">string</a></td><td colspan="2">
+            <p>REQUIRED, if the client is not authenticating with the
+              authorization server as described in <a href="#section-3.2.1">Section 3.2.1</a>. </p>
+          </td></tr></table><p/></div><h6>responses</h6><div style="margin-left: 2em"><div class="h8">200</div>
+          <p>The authorization server MUST:</p>
+          <ul>
+            <li>require client authentication for confidential clients
+              or for any client that was issued client credentials (or
+              with other authentication requirements),</li>
+            <li>authenticate the client if client authentication is
+              included,</li>
+            <li>ensure that the authorization code was issued to the
+              authenticated confidential client, or if the client is
+              public, ensure that the code was issued to "client_id" in
+              the request,</li>
+            <li>verify that the authorization code is valid,
+              and</li>
+            <li>ensure that the "redirect_uri" parameter is present if
+              the "redirect_uri" parameter was included in the initial
+              authorization request as described in <a href="#section-4.1.1">Section 4.1.1</a>, and if
+              included ensure that their values are identical.</li>
+          </ul>
+          <h3 id="section-4.1.4">4.1.4. Access Token Response</h3>
+          <p> If the access token request is valid and authorized, the
+            authorization server issues an access token and optional
+            refresh token as described in <a href="#section-5.1">Section 5.1</a>. If the request client authentication
+            failed or is invalid, the authorization server returns an
+            error response as described in <a href="#section-5.2">Section 5.2</a>. </p>
+          <p>An example successful response:</p>
+          <pre xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+"example_parameter":"example_value"
+}
+            </pre>
+        <div style="margin-left: 2em"><div class="h7">representations</div><table><tr><td style="font-weight: bold">application/json</td><td colspan="2">
+      <h1 id="section-5">5. Issuing an Access Token</h1>
+      <p> If the access token request is valid and authorized, the
+        authorization server issues an access token and optional
+        refresh token as described in <a href="#section-5.1">Section 5.1</a>. If the request failed client
+        authentication or is invalid, the authorization server
+        returns an error response as described in <a href="#section-5.2">Section 5.2</a>. </p>
+      <h2 id="section-5.1">5.1. Successful Response</h2>
+      <p>The authorization server issues an access token and
+        optional refresh token, and constructs the response by
+        adding the following parameters to the entity-body of the
+        HTTP response with a 200 (OK) status code: </p>            <p>The parameters are included in the entity-body of the
+          HTTP response using the "application/json" media type as
+          defined by [RFC4627]. The parameters are serialized into a
+          JavaScript Object Notation (JSON) structure by adding each
+          parameter at the highest structure level. Parameter names
+          and string values are included as JSON strings. Numerical
+          values are included as JSON numbers. The order of
+          parameters does not matter and can vary. </p>
+      <p>The authorization server MUST include the HTTP
+        "Cache-Control" response header field [RFC2616] with a
+        value of "no-store" in any response containing tokens,
+        credentials, or other sensitive information, as well as
+        the "Pragma" response header field [RFC2616] with a value
+        of "no-cache". </p>
+      <p>For example:</p>
+      <pre xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+"example_parameter":"example_value"
+}
+            </pre>
+      <p>The client MUST ignore unrecognized value names in the
+        response. The sizes of tokens and other values received
+        from the authorization server are left undefined. The
+        client should avoid making assumptions about value sizes.
+        The authorization server SHOULD document the size of any
+        value it issues.</p>
+    </td></tr><tr><td style="padding: 0em, 0em, 0em, 2em" colspan="2"><div class="h7">plain params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">access_token</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>The access token issued by the authorization
+          server.</p>
+      </td></tr><tr><td><span style="font-weight: bold">token_type</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>The type of the token issued as described in Section
+          7.1. Value is case insensitive.</p>
+      </td></tr><tr><td><span style="font-weight: bold">expires_in</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>RECOMMENDED. The lifetime in seconds of the access
+          token. For example, the value "3600" denotes that the
+          access token will expire in one hour from the time the
+          response was generated. If omitted, the authorization
+          server SHOULD provide the expiration time via other
+          means or document the default value.</p>
+      </td></tr><tr><td><span style="font-weight: bold">refresh_token</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. The refresh token, which can be used to
+          obtain new access tokens using the same authorization
+          grant as described in <a href="#section-6">Section
+            6</a>.</p>
+      </td></tr><tr><td><span style="font-weight: bold">scope</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL, if identical to the scope requested by the
+          client; otherwise, REQUIRED. The scope of the access
+          token as described by <a href="#section-3.3">Section
+            3.3</a>.</p>
+      </td></tr></table><p/></td></tr></table></div><div class="h8">400</div>
+          <h2 id="section-5.2">5.2. Error Response</h2>
+          <p>The authorization server responds with an HTTP 400 (Bad
+            Request) status code (unless specified otherwise) and
+            includes the following parameters with the response: </p>
+        <div style="margin-left: 2em"><div class="h7">representations</div><table><tr><td style="font-weight: bold">application/json</td><td colspan="2">
+      <p>The parameters are included in the entity-body of the
+        HTTP response using the "application/json" media type as
+        defined by [RFC4627]. The parameters are serialized into a
+        JSON structure by adding each parameter at the highest
+        structure level. Parameter names and string values are
+        included as JSON strings. Numerical values are included as
+        JSON numbers. The order of parameters does not matter and
+        can vary.</p>
+      <p>For example:</p>
+      <pre xml:space="preserve">
+HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"error":"invalid_request"
+}        
+              </pre>
+    </td></tr><tr><td style="padding: 0em, 0em, 0em, 2em" colspan="2"><div class="h7">plain params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td rowspan="8"><span style="font-weight: bold">error</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>A single ASCII [USASCII] error code from the
+          following:</p>
+        <p>Values for the "error" parameter MUST NOT include
+          characters outside the set %x20-21 / %x23-5B / %x5D-7E.
+        </p>
+      </td></tr><tr><td><b>Values:</b></td><td><b>Description</b></td></tr><tr><td><tt>invalid_request</tt></td><td>
+          <p> The request is missing a required parameter,
+            includes an unsupported parameter value (other than
+            grant type), repeats a parameter, includes multiple
+            credentials, utilizes more than one mechanism for
+            authenticating the client, or is otherwise
+            malformed.</p>
+        </td></tr><tr><td><tt>invalid_client</tt></td><td>
+          <p>Client authentication failed (e.g., unknown client,
+            no client authentication included, or unsupported
+            authentication method). The authorization server MAY
+            return an HTTP 401 (Unauthorized) status code to
+            indicate which HTTP authentication schemes are
+            supported. If the client attempted to authenticate via
+            the "Authorization" request header field, the
+            authorization server MUST respond with an HTTP 401
+            (Unauthorized) status code and include the
+            "WWW-Authenticate" response header field matching the
+            authentication scheme used by the client.</p>
+        </td></tr><tr><td><tt>invalid_grant</tt></td><td>
+          <p>The provided authorization grant (e.g.,
+            authorization code, resource owner credentials) or
+            refresh token is invalid, expired, revoked, does not
+            match the redirection URI used in the authorization
+            request, or was issued to another client.</p>
+        </td></tr><tr><td><tt>unauthorized_client</tt></td><td>
+          <p>The authenticated client is not authorized to use
+            this authorization grant type.</p>
+        </td></tr><tr><td><tt>unsupported_grant_type</tt></td><td>
+          <p>The authorization grant type is not supported by
+            the authorization server.</p>
+        </td></tr><tr><td><tt>invalid_scope</tt></td><td>
+          <p>The requested scope is invalid, unknown, malformed,
+            or exceeds the scope granted by the resource
+            owner.</p>
+        </td></tr><tr><td><span style="font-weight: bold">error_description</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. Human-readable ASCII [USASCII] text
+          providing additional information, used to assist the
+          client developer in understanding the error that
+          occurred.</p>
+        <p>Values for the "error_description" parameter MUST NOT
+          include characters outside the set %x20-21 / %x23-5B /
+          %x5D-7E.</p>
+      </td></tr><tr><td><span style="font-weight: bold">error_uri</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. A URI identifying a human-readable web page
+          with information about the error, used to provide the
+          client developer with additional information about the
+          error. Values for the "error_uri" parameter MUST conform
+          to the URI-reference syntax and thus MUST NOT include
+          characters outside the set %x21 / %x23-5B / %x5D-7E.
+        </p>
+      </td></tr></table><p/></td></tr></table></div></div></div></div></div><div class="resource"><h3><a name="password_credentials_grant"><i>password_credentials_grant</i></a></h3><h2>4.3. Resource Owner Password Credentials Grant</h2>
+      <p>The resource owner password credentials grant type is
+        suitable in cases where the resource owner has a trust
+        relationship with the client, such as the device operating
+        system or a highly privileged application. The authorization
+        server should take special care when enabling this grant type
+        and only allow it when other flows are not viable.</p>
+      <p>This grant type is suitable for clients capable of obtaining
+        the resource owner's credentials (username and password,
+        typically using an interactive form). It is also used to migrate
+        existing clients using direct authentication schemes such as
+        HTTP Basic or Digest authentication to OAuth by converting the
+        stored credentials to an access token.</p>
+      <pre xml:space="preserve">
+     +----------+
+     | Resource |
+     |  Owner   |
+     |          |
+     +----------+
+          v
+          |    Resource Owner
+         (A) Password Credentials
+          |
+          v
+     +---------+                                  +---------------+
+     |         |&gt;--(B)---- Resource Owner -------&gt;|               |
+     |         |         Password Credentials     | Authorization |
+     | Client  |                                  |     Server    |
+     |         |&lt;--(C)---- Access Token ---------&lt;|               |
+     |         |    (w/ Optional Refresh Token)   |               |
+     +---------+                                  +---------------+
+
+            Figure 5: Resource Owner Password Credentials Flow
+</pre>
+      <p>The flow illustrated in Figure 5 includes the following
+        steps:</p>
+      <ol type="A"><li>The resource owner provides the client with
+          its username and password.</li>
+        <li>The client requests an access token from the authorization
+          server's token endpoint by including the credentials received
+          from the resource owner. When making the request, the client
+          authenticates with the authorization server.</li>
+        <li>The authorization server authenticates the client and
+          validates the resource owner credentials, and if valid, issues
+          an access token.</li></ol>
+    <h5>Methods</h5><div class="methods"><div class="method method1"><table class="methodNameTable"><tr><td class="methodNameTd" style="font-weight: bold"><a name="d0e1243">POST</a> <i>password_credentials_grant</i></td><td class="methodNameTd" style="text-align: right"/></tr></table>
+        <h3 id="section-4.3.1">4.3.1. Authorization Request and
+          Response</h3>
+        <p>The method through which the client obtains the resource
+          owner credentials is beyond the scope of this specification.
+          The client MUST discard the credentials once an access token
+          has been obtained.</p><h6>request</h6><div style="margin-left: 2em">
+          <h3 id="section-4.3.2">4.3.2. Access Token Request</h3>
+          <p>The client makes a request to the token endpoint by
+            adding the following parameters using the
+            "application/x-www-form-urlencoded" format per Appendix B
+            with a character encoding of UTF-8 in the HTTP request
+            entity-body:</p>
+          <p>If the client type is confidential or the client was
+            issued client credentials (or assigned other authentication
+            requirements), the client MUST authenticate with the
+            authorization server as described in <a href="#section-3.2.1">Section 3.2.1</a>.</p>
+          <p>For example, the client makes the following HTTP request
+            using transport-layer security (with extra line breaks for
+            display purposes only):</p>
+          <pre xml:space="preserve">POST /token HTTP/1.1
+Host: server.example.com
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&amp;username=johndoe&amp;password=A3ddj3w
+   </pre>
+        <div class="h7">query params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">grant_type</span><br/><a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)fixed: <tt>password</tt></td><td colspan="2"><p>Value MUST be set to "password".</p></td></tr><tr><td><span style="font-weight: bold">username</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2"><p>The resource owner username.</p></td></tr><tr><td><span style="font-weight: bold">password</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2"><p>The resource owner password.</p></td></tr><tr><td><span style="font-weight: bold">scope</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2"><p>OPTIONAL. The scope of the access request as
+              described by <a href="#section-3.3">Section
+              3.3</a>.</p></td></tr></table><p/></div><h6>responses</h6><div style="margin-left: 2em"><div class="h8">200</div>
+          <p>The authorization server MUST:</p>
+          <li>require client authentication for confidential clients
+            or for any client that was issued client credentials (or
+            with other authentication requirements),</li>
+          <li>authenticate the client if client authentication is
+            included, and</li>
+          <li>validate the resource owner password credentials using
+            its existing password validation algorithm.</li>
+          <p>Since this access token request utilizes the resource
+            owner's password, the authorization server MUST protect the
+            endpoint against brute force attacks (e.g., using
+            rate-limitation or generating alerts).</p>
+          
+          <h3 id="section-4.3.3">4.3.3. Access Token Response</h3>
+          <p>If the access token request is valid and authorized,
+            the authorization server issues an access token and
+            optional refresh token as described in <a href="#section-5.1">Section 5.1</a>. If the request
+            failed client authentication or is invalid, the
+            authorization server returns an error response as
+            described in <a href="#section-5.2">Section
+              5.2</a>.</p>
+          <p>An example successful response:</p>
+          <pre xml:space="preserve">HTTP/1.1 200 OK
+ Content-Type: application/json;charset=UTF-8
+ Cache-Control: no-store
+ Pragma: no-cache
+
+ {
+   "access_token":"2YotnFZFEjr1zCsicMWpAA",
+   "token_type":"example",
+   "expires_in":3600,
+   "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+   "example_parameter":"example_value"
+ }
+   </pre>
+        <div style="margin-left: 2em"><div class="h7">representations</div><table><tr><td style="font-weight: bold">application/json</td><td colspan="2">
+      <h1 id="section-5">5. Issuing an Access Token</h1>
+      <p> If the access token request is valid and authorized, the
+        authorization server issues an access token and optional
+        refresh token as described in <a href="#section-5.1">Section 5.1</a>. If the request failed client
+        authentication or is invalid, the authorization server
+        returns an error response as described in <a href="#section-5.2">Section 5.2</a>. </p>
+      <h2 id="section-5.1">5.1. Successful Response</h2>
+      <p>The authorization server issues an access token and
+        optional refresh token, and constructs the response by
+        adding the following parameters to the entity-body of the
+        HTTP response with a 200 (OK) status code: </p>            <p>The parameters are included in the entity-body of the
+          HTTP response using the "application/json" media type as
+          defined by [RFC4627]. The parameters are serialized into a
+          JavaScript Object Notation (JSON) structure by adding each
+          parameter at the highest structure level. Parameter names
+          and string values are included as JSON strings. Numerical
+          values are included as JSON numbers. The order of
+          parameters does not matter and can vary. </p>
+      <p>The authorization server MUST include the HTTP
+        "Cache-Control" response header field [RFC2616] with a
+        value of "no-store" in any response containing tokens,
+        credentials, or other sensitive information, as well as
+        the "Pragma" response header field [RFC2616] with a value
+        of "no-cache". </p>
+      <p>For example:</p>
+      <pre xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+"example_parameter":"example_value"
+}
+            </pre>
+      <p>The client MUST ignore unrecognized value names in the
+        response. The sizes of tokens and other values received
+        from the authorization server are left undefined. The
+        client should avoid making assumptions about value sizes.
+        The authorization server SHOULD document the size of any
+        value it issues.</p>
+    </td></tr><tr><td style="padding: 0em, 0em, 0em, 2em" colspan="2"><div class="h7">plain params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">access_token</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>The access token issued by the authorization
+          server.</p>
+      </td></tr><tr><td><span style="font-weight: bold">token_type</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>The type of the token issued as described in Section
+          7.1. Value is case insensitive.</p>
+      </td></tr><tr><td><span style="font-weight: bold">expires_in</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>RECOMMENDED. The lifetime in seconds of the access
+          token. For example, the value "3600" denotes that the
+          access token will expire in one hour from the time the
+          response was generated. If omitted, the authorization
+          server SHOULD provide the expiration time via other
+          means or document the default value.</p>
+      </td></tr><tr><td><span style="font-weight: bold">refresh_token</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. The refresh token, which can be used to
+          obtain new access tokens using the same authorization
+          grant as described in <a href="#section-6">Section
+            6</a>.</p>
+      </td></tr><tr><td><span style="font-weight: bold">scope</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL, if identical to the scope requested by the
+          client; otherwise, REQUIRED. The scope of the access
+          token as described by <a href="#section-3.3">Section
+            3.3</a>.</p>
+      </td></tr></table><p/></td></tr></table></div><div class="h8">400</div><div style="margin-left: 2em"><div class="h7">representations</div><table><tr><td style="font-weight: bold">application/json</td><td colspan="2">
+      <p>The parameters are included in the entity-body of the
+        HTTP response using the "application/json" media type as
+        defined by [RFC4627]. The parameters are serialized into a
+        JSON structure by adding each parameter at the highest
+        structure level. Parameter names and string values are
+        included as JSON strings. Numerical values are included as
+        JSON numbers. The order of parameters does not matter and
+        can vary.</p>
+      <p>For example:</p>
+      <pre xml:space="preserve">
+HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"error":"invalid_request"
+}        
+              </pre>
+    </td></tr><tr><td style="padding: 0em, 0em, 0em, 2em" colspan="2"><div class="h7">plain params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td rowspan="8"><span style="font-weight: bold">error</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>A single ASCII [USASCII] error code from the
+          following:</p>
+        <p>Values for the "error" parameter MUST NOT include
+          characters outside the set %x20-21 / %x23-5B / %x5D-7E.
+        </p>
+      </td></tr><tr><td><b>Values:</b></td><td><b>Description</b></td></tr><tr><td><tt>invalid_request</tt></td><td>
+          <p> The request is missing a required parameter,
+            includes an unsupported parameter value (other than
+            grant type), repeats a parameter, includes multiple
+            credentials, utilizes more than one mechanism for
+            authenticating the client, or is otherwise
+            malformed.</p>
+        </td></tr><tr><td><tt>invalid_client</tt></td><td>
+          <p>Client authentication failed (e.g., unknown client,
+            no client authentication included, or unsupported
+            authentication method). The authorization server MAY
+            return an HTTP 401 (Unauthorized) status code to
+            indicate which HTTP authentication schemes are
+            supported. If the client attempted to authenticate via
+            the "Authorization" request header field, the
+            authorization server MUST respond with an HTTP 401
+            (Unauthorized) status code and include the
+            "WWW-Authenticate" response header field matching the
+            authentication scheme used by the client.</p>
+        </td></tr><tr><td><tt>invalid_grant</tt></td><td>
+          <p>The provided authorization grant (e.g.,
+            authorization code, resource owner credentials) or
+            refresh token is invalid, expired, revoked, does not
+            match the redirection URI used in the authorization
+            request, or was issued to another client.</p>
+        </td></tr><tr><td><tt>unauthorized_client</tt></td><td>
+          <p>The authenticated client is not authorized to use
+            this authorization grant type.</p>
+        </td></tr><tr><td><tt>unsupported_grant_type</tt></td><td>
+          <p>The authorization grant type is not supported by
+            the authorization server.</p>
+        </td></tr><tr><td><tt>invalid_scope</tt></td><td>
+          <p>The requested scope is invalid, unknown, malformed,
+            or exceeds the scope granted by the resource
+            owner.</p>
+        </td></tr><tr><td><span style="font-weight: bold">error_description</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. Human-readable ASCII [USASCII] text
+          providing additional information, used to assist the
+          client developer in understanding the error that
+          occurred.</p>
+        <p>Values for the "error_description" parameter MUST NOT
+          include characters outside the set %x20-21 / %x23-5B /
+          %x5D-7E.</p>
+      </td></tr><tr><td><span style="font-weight: bold">error_uri</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. A URI identifying a human-readable web page
+          with information about the error, used to provide the
+          client developer with additional information about the
+          error. Values for the "error_uri" parameter MUST conform
+          to the URI-reference syntax and thus MUST NOT include
+          characters outside the set %x21 / %x23-5B / %x5D-7E.
+        </p>
+      </td></tr></table><p/></td></tr></table></div></div></div></div></div><div class="resource"><h3><a name="client_credentials_grant"><i>client_credentials_grant</i></a></h3><h2 id="section-4.4">4.4. Client Credentials Grant</h2>
+      <p>The client can request an access token using only its client
+        credentials (or other supported means of authentication) when
+        the client is requesting access to the protected resources under
+        its control, or those of another resource owner that have been
+        previously arranged with the authorization server (the method of
+        which is beyond the scope of this specification).</p>
+      <p>The client credentials grant type MUST only be used by
+        confidential clients.</p>
+      <pre xml:space="preserve">
+  +---------+                                  +---------------+
+  |         |                                  |               |
+  |         |&gt;--(A)- Client Authentication ---&gt;| Authorization |
+  | Client  |                                  |     Server    |
+  |         |&lt;--(B)---- Access Token ---------&lt;|               |
+  |         |                                  |               |
+  +---------+                                  +---------------+
+    
+    Figure 6: Client Credentials Flow
+    
+    </pre>
+      <p>The flow illustrated in Figure 6 includes the following
+        steps:</p>
+      <ol type="A">
+        <li>The client authenticates with the authorization server and
+          requests an access token from the token endpoint.</li>
+          <li>The authorization server authenticates the client, and
+          if valid, issues an access token.</li>
+      </ol>
+    <h5>Methods</h5><div class="methods"><div class="method method1"><table class="methodNameTable"><tr><td class="methodNameTd" style="font-weight: bold"><a name="d0e1384">POST</a> <i>client_credentials_grant</i></td><td class="methodNameTd" style="text-align: right"/></tr></table>
+        <h3 id="section-4.4.1">4.4.1. Authorization Request and
+          Response</h3>
+        <p>Since the client authentication is used as the
+          authorization grant, no additional authorization request is
+          needed.</p>
+      <h6>request</h6><div style="margin-left: 2em">
+          <h3>4.4.2. Access Token Request</h3>
+          <p> The client makes a request to the token endpoint by
+            adding the following parameters using the
+            "application/x-www-form-urlencoded" format per Appendix B
+            with a character encoding of UTF-8 in the HTTP request
+            entity-body:</p>
+          <p>The client MUST authenticate with the authorization
+            server as described in <a href="#section-3.2.1">Section 3.2.1</a>.</p>
+          <p>For example, the client makes the following HTTP request
+            using transport-layer security (with extra line breaks for
+            display purposes only):</p>
+          <pre xml:space="preserve">POST /token HTTP/1.1
+Host: server.example.com
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+    </pre>
+          <p>The authorization server MUST authenticate the
+            client.</p>
+        <div class="h7">query params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">grant_type</span><br/><a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)fixed: <tt>client_credentials</tt></td><td colspan="2"><p>Value MUST be set to
+            "client_credentials".</p></td></tr><tr><td><span style="font-weight: bold">scope</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2"><p>OPTIONAL. The scope of the access request as
+              described by <a href="#section-3.3">Section 3.3</a>.</p></td></tr></table><p/></div><h6>responses</h6><div style="margin-left: 2em"><div class="h8">200</div>
+          <h3 id="section-4.4.3">4.4.3. Access Token Response</h3>
+          <p>If the access token request is valid and authorized, the
+            authorization server issues an access token as described in
+            <a href="#section-5.1">Section 5.1</a>. A refresh token SHOULD NOT be included. If the
+            request failed client authentication or is invalid, the
+            authorization server returns an error response as described
+            in <a href="#section-5.2">Section 5.2</a>. </p>
+          <p>An example successful response:</p>
+          <pre xml:space="preserve">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"example_parameter":"example_value"
+}
+          </pre>
+        <div style="margin-left: 2em"><div class="h7">representations</div><table><tr><td style="font-weight: bold">application/json</td><td colspan="2">
+      <h1 id="section-5">5. Issuing an Access Token</h1>
+      <p> If the access token request is valid and authorized, the
+        authorization server issues an access token and optional
+        refresh token as described in <a href="#section-5.1">Section 5.1</a>. If the request failed client
+        authentication or is invalid, the authorization server
+        returns an error response as described in <a href="#section-5.2">Section 5.2</a>. </p>
+      <h2 id="section-5.1">5.1. Successful Response</h2>
+      <p>The authorization server issues an access token and
+        optional refresh token, and constructs the response by
+        adding the following parameters to the entity-body of the
+        HTTP response with a 200 (OK) status code: </p>            <p>The parameters are included in the entity-body of the
+          HTTP response using the "application/json" media type as
+          defined by [RFC4627]. The parameters are serialized into a
+          JavaScript Object Notation (JSON) structure by adding each
+          parameter at the highest structure level. Parameter names
+          and string values are included as JSON strings. Numerical
+          values are included as JSON numbers. The order of
+          parameters does not matter and can vary. </p>
+      <p>The authorization server MUST include the HTTP
+        "Cache-Control" response header field [RFC2616] with a
+        value of "no-store" in any response containing tokens,
+        credentials, or other sensitive information, as well as
+        the "Pragma" response header field [RFC2616] with a value
+        of "no-cache". </p>
+      <p>For example:</p>
+      <pre xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+"example_parameter":"example_value"
+}
+            </pre>
+      <p>The client MUST ignore unrecognized value names in the
+        response. The sizes of tokens and other values received
+        from the authorization server are left undefined. The
+        client should avoid making assumptions about value sizes.
+        The authorization server SHOULD document the size of any
+        value it issues.</p>
+    </td></tr><tr><td style="padding: 0em, 0em, 0em, 2em" colspan="2"><div class="h7">plain params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td><span style="font-weight: bold">access_token</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>The access token issued by the authorization
+          server.</p>
+      </td></tr><tr><td><span style="font-weight: bold">token_type</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>The type of the token issued as described in Section
+          7.1. Value is case insensitive.</p>
+      </td></tr><tr><td><span style="font-weight: bold">expires_in</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>RECOMMENDED. The lifetime in seconds of the access
+          token. For example, the value "3600" denotes that the
+          access token will expire in one hour from the time the
+          response was generated. If omitted, the authorization
+          server SHOULD provide the expiration time via other
+          means or document the default value.</p>
+      </td></tr><tr><td><span style="font-weight: bold">refresh_token</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. The refresh token, which can be used to
+          obtain new access tokens using the same authorization
+          grant as described in <a href="#section-6">Section
+            6</a>.</p>
+      </td></tr><tr><td><span style="font-weight: bold">scope</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL, if identical to the scope requested by the
+          client; otherwise, REQUIRED. The scope of the access
+          token as described by <a href="#section-3.3">Section
+            3.3</a>.</p>
+      </td></tr></table><p/></td></tr></table></div><div class="h8">400</div><div style="margin-left: 2em"><div class="h7">representations</div><table><tr><td style="font-weight: bold">application/json</td><td colspan="2">
+      <p>The parameters are included in the entity-body of the
+        HTTP response using the "application/json" media type as
+        defined by [RFC4627]. The parameters are serialized into a
+        JSON structure by adding each parameter at the highest
+        structure level. Parameter names and string values are
+        included as JSON strings. Numerical values are included as
+        JSON numbers. The order of parameters does not matter and
+        can vary.</p>
+      <p>For example:</p>
+      <pre xml:space="preserve">
+HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+
+{
+"error":"invalid_request"
+}        
+              </pre>
+    </td></tr><tr><td style="padding: 0em, 0em, 0em, 2em" colspan="2"><div class="h7">plain params</div><table><col style="width: 10em"/><col style="width: 15em"/><tr><td rowspan="8"><span style="font-weight: bold">error</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/><br/>(required)</td><td colspan="2">
+        <p>A single ASCII [USASCII] error code from the
+          following:</p>
+        <p>Values for the "error" parameter MUST NOT include
+          characters outside the set %x20-21 / %x23-5B / %x5D-7E.
+        </p>
+      </td></tr><tr><td><b>Values:</b></td><td><b>Description</b></td></tr><tr><td><tt>invalid_request</tt></td><td>
+          <p> The request is missing a required parameter,
+            includes an unsupported parameter value (other than
+            grant type), repeats a parameter, includes multiple
+            credentials, utilizes more than one mechanism for
+            authenticating the client, or is otherwise
+            malformed.</p>
+        </td></tr><tr><td><tt>invalid_client</tt></td><td>
+          <p>Client authentication failed (e.g., unknown client,
+            no client authentication included, or unsupported
+            authentication method). The authorization server MAY
+            return an HTTP 401 (Unauthorized) status code to
+            indicate which HTTP authentication schemes are
+            supported. If the client attempted to authenticate via
+            the "Authorization" request header field, the
+            authorization server MUST respond with an HTTP 401
+            (Unauthorized) status code and include the
+            "WWW-Authenticate" response header field matching the
+            authentication scheme used by the client.</p>
+        </td></tr><tr><td><tt>invalid_grant</tt></td><td>
+          <p>The provided authorization grant (e.g.,
+            authorization code, resource owner credentials) or
+            refresh token is invalid, expired, revoked, does not
+            match the redirection URI used in the authorization
+            request, or was issued to another client.</p>
+        </td></tr><tr><td><tt>unauthorized_client</tt></td><td>
+          <p>The authenticated client is not authorized to use
+            this authorization grant type.</p>
+        </td></tr><tr><td><tt>unsupported_grant_type</tt></td><td>
+          <p>The authorization grant type is not supported by
+            the authorization server.</p>
+        </td></tr><tr><td><tt>invalid_scope</tt></td><td>
+          <p>The requested scope is invalid, unknown, malformed,
+            or exceeds the scope granted by the resource
+            owner.</p>
+        </td></tr><tr><td><span style="font-weight: bold">error_description</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. Human-readable ASCII [USASCII] text
+          providing additional information, used to assist the
+          client developer in understanding the error that
+          occurred.</p>
+        <p>Values for the "error_description" parameter MUST NOT
+          include characters outside the set %x20-21 / %x23-5B /
+          %x5D-7E.</p>
+      </td></tr><tr><td><span style="font-weight: bold">error_uri</span><br/> unspecified type <a href="http://wadl.dev.java.net/2009/02#"/></td><td colspan="2">
+        <p>OPTIONAL. A URI identifying a human-readable web page
+          with information about the error, used to provide the
+          client developer with additional information about the
+          error. Values for the "error_uri" parameter MUST conform
+          to the URI-reference syntax and thus MUST NOT include
+          characters outside the set %x21 / %x23-5B / %x5D-7E.
+        </p>
+      </td></tr></table><p/></td></tr></table></div></div></div></div></div></body></html>

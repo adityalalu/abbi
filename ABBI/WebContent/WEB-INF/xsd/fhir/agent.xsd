@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  © HL7 (http://hl7.org)
+  Generated on Wed, Nov 14, 2012 09:38+1100 for FHIR v0.06 
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hl7.org/fhir" xmlns:xhtml="http://www.w3.org/1999/xhtml" targetNamespace="http://hl7.org/fhir" elementFormDefault="qualified" version="0.06">
+  <xs:include schemaLocation="fhir-base.xsd"/>
+  <xs:element name="Agent" type="Agent">
+    <xs:annotation>
+      <xs:documentation>todo</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="Agent">
+    <xs:sequence>
+      <xs:element name="person" minOccurs="1" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The person who acts as the agent</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="organization" minOccurs="1" maxOccurs="1" type="ResourceReference">
+        <xs:annotation>
+          <xs:documentation>The organisation that is being represented</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="role" minOccurs="1" maxOccurs="unbounded" type="CodeableConcept">
+        <xs:annotation>
+          <xs:documentation>The way in which the person represents the organisation - what role do they have?</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="period" minOccurs="0" maxOccurs="1" type="Period">
+        <xs:annotation>
+          <xs:documentation>The time period during which the agent was/is authorised to represent the organisation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="identifier" minOccurs="0" maxOccurs="unbounded" type="HumanId">
+        <xs:annotation>
+          <xs:documentation>An identifier that applies to this person in this role</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="address" minOccurs="0" maxOccurs="unbounded" type="Address">
+        <xs:annotation>
+          <xs:documentation>A postal address for this person playing this role</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="contact" minOccurs="0" maxOccurs="unbounded" type="Contact">
+        <xs:annotation>
+          <xs:documentation>A contact detail address for this person playing this role</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="extension" type="Extension" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>See Extensions</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="text" type="Narrative" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Text summary of resource (for human interpretation)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
